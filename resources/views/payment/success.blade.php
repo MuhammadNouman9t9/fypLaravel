@@ -71,6 +71,9 @@
                 {{ __('Continue Shopping') }}
             </a>
             @auth
+                <a href="{{ route('orders.show', $order) }}" class="inline-flex items-center justify-center rounded-full border border-[#6366f1] bg-[#6366f1] px-6 py-3 text-sm font-semibold text-white hover:bg-[#4f46e5]">
+                    {{ __('View Order Details') }}
+                </a>
                 <a href="{{ route('dashboard') }}" class="inline-flex items-center justify-center rounded-full border border-[#d1d5db] bg-white px-6 py-3 text-sm font-semibold text-[#475569] hover:bg-[#f9fafb]">
                     {{ __('View Dashboard') }}
                 </a>

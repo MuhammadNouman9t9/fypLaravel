@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Shipment;
+use App\Notifications\OrderStatusUpdatedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -57,6 +58,9 @@ class OrderController extends Controller
             'payment_status' => ['nullable', 'string', 'in:unpaid,paid,refunded,partially_refunded'],
         ]);
 
+        $oldStatus = $order->status;
+        $newStatus = $validated['status'];
+
         $order->update($validated);
 
         if ($validated['status'] === 'delivered') {
@@ -67,11 +71,27 @@ class OrderController extends Controller
             $order->update(['cancelled_at' => now()]);
         }
 
-        return back()->with('status', __('Order status updated successfully.'));
+        // Send email notification to user if status changed
+        if ($oldStatus !== $newStatus && $order->user) {
+            try {
+                $order->load('shipments');
+                $order->user->notify(new OrderStatusUpdatedNotification($order, $oldStatus, $newStatus));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send order status email', [
+                    'order_id' => $order->id,
+                    'user_id' => $order->user_id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return back()->with('status', __('Order status updated successfully. Email notification sent to customer.'));
     }
 
     public function confirm(Order $order): RedirectResponse
     {
+        $oldStatus = $order->status;
+
         $order->update([
             'status' => 'processing',
             'placed_at' => $order->placed_at ?? now(),
@@ -89,6 +109,20 @@ class OrderController extends Controller
             ]);
         }
 
-        return back()->with('status', __('Order confirmed successfully. Tracking ID generated.'));
+        // Send email notification to user
+        if ($oldStatus !== 'processing' && $order->user) {
+            try {
+                $order->load('shipments');
+                $order->user->notify(new OrderStatusUpdatedNotification($order, $oldStatus, 'processing'));
+            } catch (\Exception $e) {
+                \Log::error('Failed to send order confirmation email', [
+                    'order_id' => $order->id,
+                    'user_id' => $order->user_id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        return back()->with('status', __('Order confirmed successfully. Tracking ID generated. Email notification sent to customer.'));
     }
 }

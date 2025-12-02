@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Shield Icon -->
     <div class="flex justify-center mb-6">
-        <x-shield-logo class="h-16 w-16 text-blue-600" />
+        <x-shield-logo class="h-16 w-16 text-purple-600" />
     </div>
 
     <!-- Welcome Heading -->
@@ -21,14 +21,18 @@
             <x-input-label for="first_name" :value="__('First name')" class="font-semibold text-gray-900" />
             <x-text-input 
                 id="first_name" 
-                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500" 
                 type="text" 
                 name="first_name" 
                 :value="old('first_name')" 
+                minlength="2"
+                maxlength="50"
+                pattern="[a-zA-Z\s]+"
                 required 
                 autofocus 
                 autocomplete="given-name" 
             />
+            <p class="mt-1 text-xs text-gray-500">Minimum 2 characters, letters and spaces only</p>
             <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
         </div>
 
@@ -37,13 +41,17 @@
             <x-input-label for="last_name" :value="__('Last name')" class="font-semibold text-gray-900" />
             <x-text-input 
                 id="last_name" 
-                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500" 
                 type="text" 
                 name="last_name" 
                 :value="old('last_name')" 
+                minlength="2"
+                maxlength="50"
+                pattern="[a-zA-Z\s]+"
                 required 
                 autocomplete="family-name" 
             />
+            <p class="mt-1 text-xs text-gray-500">Minimum 2 characters, letters and spaces only</p>
             <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
         </div>
 
@@ -52,11 +60,12 @@
             <x-input-label for="email" :value="__('Email')" class="font-semibold text-gray-900" />
             <x-text-input 
                 id="email" 
-                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500" 
                 type="email" 
                 name="email" 
                 :value="old('email')" 
                 placeholder="you@example.com"
+                maxlength="255"
                 required 
                 autocomplete="username" 
             />
@@ -72,15 +81,19 @@
                 </span>
                 <x-text-input 
                     id="phone" 
-                    class="block w-full rounded-r-lg rounded-l-none border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                    class="block w-full rounded-r-lg rounded-l-none border-gray-300 focus:border-purple-500 focus:ring-purple-500" 
                     type="tel" 
                     name="phone" 
                     :value="old('phone') ? (str_starts_with(old('phone'), '+92') ? substr(old('phone'), 3) : old('phone')) : ''" 
                     placeholder="3001234567"
+                    minlength="10"
+                    maxlength="10"
+                    pattern="[0-9]{10}"
                     required 
                     autocomplete="tel" 
                 />
             </div>
+            <p class="mt-1 text-xs text-gray-500">Enter 10 digits without spaces (e.g., 3001234567)</p>
             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
         </div>
 
@@ -90,7 +103,7 @@
             <div class="relative">
                 <x-text-input 
                     id="password" 
-                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10"
+                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 pr-10"
                     type="password"
                     name="password"
                     required 
@@ -115,7 +128,7 @@
             <div class="relative">
                 <x-text-input 
                     id="password_confirmation" 
-                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10"
+                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 pr-10"
                     type="password"
                     name="password_confirmation" 
                     required 
@@ -136,7 +149,7 @@
 
         <!-- Register Button -->
         <div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+            <button type="submit" class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition">
                 {{ __('Register') }}
             </button>
         </div>
@@ -146,7 +159,7 @@
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
             Already have an account?
-            <a href="{{ route('login') }}" class="text-blue-600 font-semibold hover:text-blue-700">
+            <a href="{{ route('login') }}" class="text-purple-600 font-semibold hover:text-purple-700">
                 Login
             </a>
         </p>
@@ -168,5 +181,27 @@
                 eyeOff.classList.add('hidden');
             }
         }
+
+        // Phone number validation - only allow numbers
+        document.getElementById('phone').addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            // Limit to 10 digits
+            if (this.value.length > 10) {
+                this.value = this.value.slice(0, 10);
+            }
+        });
+
+        // First name and last name validation - only allow letters and spaces
+        ['first_name', 'last_name'].forEach(function(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', function(e) {
+                    // Remove any characters that are not letters or spaces
+                    this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+                });
+            }
+        });
     </script>
 </x-guest-layout>
