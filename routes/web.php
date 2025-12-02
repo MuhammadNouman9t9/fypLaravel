@@ -23,7 +23,27 @@ Route::delete('/cart/{product:slug}', [CartController::class, 'destroy'])->name(
 Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout')->middleware('auth');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $user = auth()->user();
+
+    // Load user addresses for profile forms
+    $user->load([
+        'addresses' => fn ($query) => $query
+            ->orderByDesc('is_primary')
+            ->orderBy('created_at'),
+    ]);
+
+    // Load recent orders
+    $orders = \App\Models\Order::query()
+        ->where('user_id', $user->id)
+        ->with(['items.product.media', 'shipments', 'payments'])
+        ->latest('created_at')
+        ->limit(5)
+        ->get();
+
+    return view('dashboard', [
+        'user' => $user,
+        'orders' => $orders,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -58,26 +78,5 @@ Route::middleware('auth')->group(function () {
 
 // Stripe Webhook (no auth required)
 Route::post('/payment/webhook/stripe', [\App\Http\Controllers\Payment\PaymentController::class, 'webhook'])->name('payment.webhook.stripe');
-
-// Test Email Route (Remove in production!)
-Route::get('/test-email', function () {
-    try {
-        \Illuminate\Support\Facades\Mail::raw('This is a test email from SafeNest application. If you receive this, your email configuration is working correctly!', function ($message) {
-            $message->to('mnoumancreat@gmail.com')
-                ->subject('SafeNest - Email Test');
-        });
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Test email sent successfully! Check your inbox at mnoumancreat@gmail.com',
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Failed to send email: '.$e->getMessage(),
-            'error' => $e->getTraceAsString(),
-        ], 500);
-    }
-})->middleware('auth');
 
 require __DIR__.'/auth.php';

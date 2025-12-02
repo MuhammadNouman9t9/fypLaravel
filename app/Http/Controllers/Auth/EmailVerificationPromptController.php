@@ -16,23 +16,13 @@ class EmailVerificationPromptController extends Controller
     {
         $user = $request->user();
 
-        // If email is already verified, go to dashboard
+        // If email is already verified, always redirect to dashboard
+        // Phone verification is optional, don't block access if email is verified
         if ($user->hasVerifiedEmail()) {
-            // If phone is also verified, go to dashboard
-            if ($user->phone_verified_at) {
-                return redirect()->intended(route('dashboard'));
-            }
-
-            // If phone is not verified, redirect to OTP selection
-            return redirect()->route('otp.select-option');
+            return redirect()->intended(route('dashboard'));
         }
 
-        // If phone is already verified but email is not, show email verification page
-        if ($user->phone_verified_at) {
-            return view('auth.verify-email');
-        }
-
-        // If neither email nor phone is verified, redirect to OTP selection
-        return redirect()->route('otp.select-option');
+        // Show email verification page if email is not verified
+        return view('auth.verify-email');
     }
 }

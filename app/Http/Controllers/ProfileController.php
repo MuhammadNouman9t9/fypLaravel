@@ -22,8 +22,17 @@ class ProfileController extends Controller
                 ->orderBy('created_at'),
         ]);
 
+        // Load recent orders
+        $orders = \App\Models\Order::query()
+            ->where('user_id', $user->id)
+            ->with(['items.product.media', 'shipments', 'payments'])
+            ->latest('created_at')
+            ->limit(5)
+            ->get();
+
         return view('profile.edit', [
             'user' => $user,
+            'orders' => $orders,
         ]);
     }
 

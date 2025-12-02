@@ -115,13 +115,6 @@ class OtpVerificationController extends Controller
         // Trim and get OTP value
         $otp = trim($request->otp);
 
-        // Hardcoded OTP for development/testing (123456)
-        if ($otp === '123456') {
-            $user->update(['phone_verified_at' => now()]);
-
-            return redirect(route('landing.home'))->with('status', 'phone-verified');
-        }
-
         // Validate OTP format (6 digits)
         if (strlen($otp) !== 6 || ! ctype_digit($otp)) {
             return back()->withErrors(['otp' => 'OTP must be 6 digits.']);
