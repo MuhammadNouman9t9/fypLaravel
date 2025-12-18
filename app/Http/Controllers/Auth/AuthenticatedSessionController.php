@@ -66,6 +66,11 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
+        // Check if 2FA is enabled and not verified in this session
+        if ($user->two_factor_confirmed_at && ! $request->session()->get('two_factor_verified')) {
+            return redirect()->route('two-factor.verify');
+        }
+
         // Regular users go to home page
         return redirect()->intended(route('landing.home'));
     }

@@ -19,12 +19,12 @@
             <header x-data="{ mobileOpen: false }" class="border-b border-purple-200 bg-white/90 backdrop-blur sticky top-0 z-50 shadow-sm">
                 <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-6 md:py-7">
                     <div class="flex items-center gap-3">
-                        <a href="{{ route('catalog.index') }}" class="inline-flex items-center gap-2 text-lg font-semibold text-[#111827]">
+                        <a href="{{ route('landing.home') }}" class="inline-flex items-center gap-2 text-lg font-semibold text-[#111827]">
                             <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-purple-600 text-white">SN</span>
                             <span>{{ config('app.name', 'SafeNest') }}</span>
                         </a>
                         <nav class="hidden ps-8 md:flex md:items-center md:gap-6">
-                            <a href="{{ route('catalog.index') }}" class="text-sm font-medium text-[#374151] hover:text-[#111827]">
+                            <a href="{{ route('landing.products') }}" class="text-sm font-medium text-[#374151] hover:text-[#111827]">
                                 {{ __('Shop') }}
                             </a>
                             <a href="{{ route('pages.projects') }}" class="text-sm font-medium text-[#374151] hover:text-[#111827]">
@@ -42,7 +42,7 @@
                         </nav>
                     </div>
                     <div class="flex items-center gap-3 md:gap-4">
-                        <form action="{{ route('catalog.index') }}" method="get" class="hidden md:block">
+                        <form action="{{ route('landing.products') }}" method="get" class="hidden md:block">
                             <label class="sr-only" for="global-search">{{ __('Search products') }}</label>
                             <input
                                 id="global-search"
@@ -94,7 +94,7 @@
                 </div>
                 <div x-show="mobileOpen" x-cloak class="border-t border-[#e5e7eb] bg-white md:hidden">
                     <nav class="space-y-1 px-4 py-4 text-sm">
-                        <a href="{{ route('catalog.index') }}" class="flex items-center justify-between rounded-xl px-3 py-2 font-medium text-[#374151] hover:bg-[#f3f4f6] hover:text-[#111827]">
+                        <a href="{{ route('landing.products') }}" class="flex items-center justify-between rounded-xl px-3 py-2 font-medium text-[#374151] hover:bg-[#f3f4f6] hover:text-[#111827]">
                             {{ __('Shop') }}
                         </a>
                         <a href="{{ route('pages.projects') }}" class="flex items-center justify-between rounded-xl px-3 py-2 font-medium text-[#374151] hover:bg-[#f3f4f6] hover:text-[#111827]">
@@ -171,7 +171,7 @@
                             <h3 class="text-lg font-bold text-white">{{ __('Quick Links') }}</h3>
                             <ul class="space-y-4 text-sm">
                                 <li>
-                                    <a href="{{ route('catalog.index') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
+                                    <a href="{{ route('landing.products') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                         </svg>

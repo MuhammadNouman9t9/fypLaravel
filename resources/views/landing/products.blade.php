@@ -19,34 +19,120 @@
                 </p>
             </div>
 
-            <!-- Category Filter Buttons -->
-            <div class="mb-8 flex flex-wrap items-center gap-3">
-                <!-- Filter Icon -->
-                <button 
-                    @click="filterOpen = !filterOpen" 
-                    class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 bg-white transition"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                    </svg>
-                    <span>Filter</span>
-                </button>
 
-                <!-- Category Buttons -->
-                <a 
-                    href="{{ route('landing.products') }}" 
-                    class="px-4 py-2 rounded-lg font-medium transition {{ !request('category') ? 'bg-purple-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50' }}"
-                >
-                    All Products
-                </a>
-                @foreach($categories as $cat)
-                    <a 
-                        href="{{ route('landing.products', ['category' => $cat->slug]) }}" 
-                        class="px-4 py-2 rounded-lg font-medium transition {{ request('category') === $cat->slug ? 'bg-purple-600 text-white' : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50' }}"
-                    >
-                        {{ $cat->name }}
-                    </a>
-                @endforeach
+            <!-- AI-Powered Recommendation Filter -->
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-8 border border-purple-200">
+                <div class="flex items-center gap-3 mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-900">AI-Powered Product Recommendations</h3>
+                </div>
+                <p class="text-sm text-gray-600 mb-4">Tell us about your property and budget, and we'll suggest the best security products for you.</p>
+                
+                <form method="GET" action="{{ route('landing.products') }}" class="space-y-4">
+                    <input type="hidden" name="ai_recommend" value="1">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Property Type -->
+                        <div>
+                            <label for="property_type" class="block text-sm font-medium text-gray-700 mb-2">
+                                Property Type <span class="text-red-500">*</span>
+                            </label>
+                            <select name="property_type" id="property_type" required class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white">
+                                <option value="">Select property type</option>
+                                <option value="apartment" {{ request('property_type') === 'apartment' ? 'selected' : '' }}>Apartment</option>
+                                <option value="condo" {{ request('property_type') === 'condo' ? 'selected' : '' }}>Condo</option>
+                                <option value="house" {{ request('property_type') === 'house' ? 'selected' : '' }}>House</option>
+                                <option value="villa" {{ request('property_type') === 'villa' ? 'selected' : '' }}>Villa</option>
+                                <option value="office" {{ request('property_type') === 'office' ? 'selected' : '' }}>Office</option>
+                            </select>
+                        </div>
+
+                        <!-- Budget -->
+                        <div>
+                            <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">
+                                Budget ($) <span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="budget" 
+                                id="budget" 
+                                value="{{ request('budget') }}"
+                                placeholder="e.g., 5000"
+                                min="0"
+                                step="100"
+                                required
+                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
+                            />
+                        </div>
+
+                        <!-- Property Size (Optional) -->
+                        <div>
+                            <label for="property_size" class="block text-sm font-medium text-gray-700 mb-2">
+                                Property Size (sq ft) <span class="text-gray-400 text-xs">(Optional)</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="property_size" 
+                                id="property_size" 
+                                value="{{ request('property_size') }}"
+                                placeholder="e.g., 1500"
+                                min="0"
+                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Entry Points -->
+                        <div>
+                            <label for="entry_points" class="block text-sm font-medium text-gray-700 mb-2">
+                                Number of Entry Points <span class="text-gray-400 text-xs">(Optional)</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="entry_points" 
+                                id="entry_points" 
+                                value="{{ request('entry_points') }}"
+                                placeholder="e.g., 2"
+                                min="0"
+                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
+                            />
+                        </div>
+
+                        <!-- Exit Points -->
+                        <div>
+                            <label for="exit_points" class="block text-sm font-medium text-gray-700 mb-2">
+                                Number of Exit Points <span class="text-gray-400 text-xs">(Optional)</span>
+                            </label>
+                            <input 
+                                type="number" 
+                                name="exit_points" 
+                                id="exit_points" 
+                                value="{{ request('exit_points') }}"
+                                placeholder="e.g., 2"
+                                min="0"
+                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                            Get AI Recommendations
+                        </button>
+                        
+                        @if(request('ai_recommend'))
+                            <a href="{{ route('landing.products') }}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition bg-white">
+                                Clear AI Filters
+                            </a>
+                        @endif
+                    </div>
+                </form>
             </div>
 
             <!-- Advanced Filters Panel -->
@@ -117,12 +203,35 @@
                 </form>
             </div>
 
+            <!-- AI Recommendation Notice -->
+            @if($usingAI ?? false)
+                <div class="mb-6 rounded-lg bg-purple-50 border border-purple-200 px-4 py-3">
+                    <div class="flex items-center gap-3">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <div>
+                            <p class="text-sm font-semibold text-purple-900">AI Recommendations Active</p>
+                            <p class="text-xs text-purple-700">
+                                Showing products recommended for 
+                                @if(request('property_type'))
+                                    <strong>{{ ucfirst(request('property_type')) }}</strong>
+                                @endif
+                                @if(request('budget'))
+                                    with a budget of <strong>${{ number_format(request('budget'), 2) }}</strong>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- Products Grid -->
             @if($products->count() > 0)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     @foreach($products as $product)
                         <article class="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                            <a href="{{ route('catalog.show', $product) }}" class="relative block h-56 overflow-hidden bg-[#f8fafc]">
+                            <div class="relative block h-56 overflow-hidden bg-[#f8fafc]">
                                 @if ($product->cover_image_url)
                                     <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
                                 @else
@@ -130,13 +239,13 @@
                                         {{ __('Image coming soon') }}
                                     </div>
                                 @endif
-                            </a>
+                            </div>
                             <div class="flex flex-1 flex-col gap-3 p-5">
                                 <div class="flex items-center justify-between text-xs uppercase tracking-wide text-[#6366f1]">
                                     <span>{{ $product->primary_category_name ?? __('All smart security') }}</span>
                                     <span>{{ $product->brand }}</span>
                                 </div>
-                                <a href="{{ route('catalog.show', $product) }}" class="text-lg font-semibold text-[#0f172a] hover:text-purple-600">{{ $product->name }}</a>
+                                <span class="text-lg font-semibold text-[#0f172a]">{{ $product->name }}</span>
                                 <p class="line-clamp-2 text-sm leading-relaxed text-[#475569]">{{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 80) }}</p>
                                 <div class="mt-auto space-y-3 pt-2">
                                     <div class="flex items-center justify-between">

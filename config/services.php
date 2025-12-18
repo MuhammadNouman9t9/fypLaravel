@@ -36,6 +36,11 @@ return [
     ],
 
     'safenest' => [
+        'python_api' => [
+            'url' => env('SAFENEST_PYTHON_API_URL'),
+            'key' => env('SAFENEST_PYTHON_API_KEY'),
+            'timeout' => (int) env('SAFENEST_PYTHON_API_TIMEOUT', 10),
+        ],
         'recommendation' => [
             'base_url' => env('SAFENEST_RECOMMENDER_URL'),
             'api_key' => env('SAFENEST_RECOMMENDER_KEY'),

@@ -1,24 +1,4 @@
 <x-landing-layout title="Cart">
-    <section class="border-b border-[#e5e7eb] bg-white">
-        <div class="mx-auto max-w-6xl px-4 py-14 lg:py-16">
-            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div class="space-y-4">
-                    <p class="text-sm font-semibold uppercase tracking-wide text-[#2563eb]">{{ __('Your SafeNest cart') }}</p>
-                    <h1 class="text-3xl font-semibold text-[#0f172a] sm:text-4xl">
-                        {{ __('Lock in proactive protection for your property') }}
-                    </h1>
-                    <p class="text-sm leading-relaxed text-[#475569]">
-                        {{ __('Review devices, adjust quantities, and proceed to checkout when you are ready. Installation guidance is available at every step.') }}
-                    </p>
-                </div>
-                <a href="{{ route('catalog.index') }}" class="inline-flex items-center gap-2 rounded-full border border-purple-600 px-5 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
-                    {{ __('Continue shopping') }}
-                    <span aria-hidden="true">→</span>
-                </a>
-            </div>
-        </div>
-    </section>
-
     <section class="mx-auto max-w-6xl px-4 py-14 lg:py-16">
         @if (session('status'))
             <div class="mb-8 rounded-2xl border border-[#bbf7d0] bg-[#dcfce7] px-6 py-4 text-sm font-medium text-[#166534]">
@@ -32,7 +12,7 @@
                 <p class="mt-3 text-sm text-[#4338ca]">
                     {{ __('Explore SafeNest AI bundles and add smart devices that match your property profile.') }}
                 </p>
-                <a href="{{ route('catalog.index') }}" class="mt-6 inline-flex items-center justify-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#312e81] shadow-sm hover:bg-[#e0e7ff]">
+                <a href="{{ route('landing.products') }}" class="mt-6 inline-flex items-center justify-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#312e81] shadow-sm hover:bg-[#e0e7ff]">
                     {{ __('Browse devices') }}
                 </a>
             </div>
@@ -60,9 +40,9 @@
                                 <div class="flex flex-1 flex-col gap-4">
                                     <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                         <div class="space-y-1">
-                                            <a href="{{ route('catalog.show', $product) }}" class="text-lg font-semibold text-[#0f172a] hover:text-purple-600">
+                                            <span class="text-lg font-semibold text-[#0f172a]">
                                                 {{ $product->name }}
-                                            </a>
+                                            </span>
                                             <p class="text-sm text-[#475569]">{{ $product->brand }}</p>
                                             <p class="text-xs uppercase tracking-wide text-[#6366f1]">
                                                 {{ $product->primary_category_name ?? __('Smart security') }}

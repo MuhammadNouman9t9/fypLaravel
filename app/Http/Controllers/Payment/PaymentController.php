@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\ProcessPaymentRequest;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Services\FraudDetectionService;
 use App\Services\StripeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 class PaymentController extends Controller
 {
     public function __construct(
-        private StripeService $stripeService
+        private StripeService $stripeService,
+        private FraudDetectionService $fraudDetectionService
     ) {}
 
     public function checkout(Order $order): View|RedirectResponse
@@ -81,6 +83,26 @@ class PaymentController extends Controller
                     'paid_at' => now(),
                 ]);
 
+                // Run fraud detection after successful payment
+                try {
+                    $fraudAlert = $this->fraudDetectionService->analyzePayment($payment, $order);
+                    if ($fraudAlert && $fraudAlert->isHighRisk()) {
+                        // Log high-risk fraud detection
+                        Log::warning('High-risk fraud detected for payment', [
+                            'payment_id' => $payment->id,
+                            'order_id' => $order->id,
+                            'fraud_alert_id' => $fraudAlert->id,
+                            'risk_score' => $fraudAlert->score,
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    // Don't fail payment if fraud detection fails
+                    Log::error('Fraud detection error', [
+                        'payment_id' => $payment->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+
                 if ($request->wantsJson() || $request->ajax()) {
                     return response()->json([
                         'success' => true,
@@ -96,7 +118,7 @@ class PaymentController extends Controller
 
             if ($paymentIntent->status === 'requires_payment_method') {
                 $errorMessage = $paymentIntent->last_payment_error->message ?? __('Payment failed. Please try again.');
-                
+
                 if ($request->wantsJson() || $request->ajax()) {
                     return response()->json([
                         'success' => false,
@@ -127,7 +149,7 @@ class PaymentController extends Controller
             // Handle failed or canceled statuses
             if (in_array($paymentIntent->status, ['canceled', 'failed'])) {
                 $errorMessage = $paymentIntent->last_payment_error->message ?? __('Payment was not completed.');
-                
+
                 if ($request->wantsJson() || $request->ajax()) {
                     return response()->json([
                         'success' => false,

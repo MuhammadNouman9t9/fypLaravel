@@ -34,12 +34,20 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('support/{conversation}/respond', [SupportController::class, 'respond'])->name('support.respond');
     Route::patch('support/{conversation}/status', [SupportController::class, 'updateStatus'])->name('support.update-status');
 
+    // Analytics Routes
+    Route::get('analytics', [\App\Http\Controllers\Admin\AnalyticsController::class, 'index'])->name('analytics.index');
+
+    // Fraud Alerts Routes
+    Route::get('fraud-alerts', [\App\Http\Controllers\Admin\FraudAlertController::class, 'index'])->name('fraud-alerts.index');
+    Route::get('fraud-alerts/{fraudAlert}', [\App\Http\Controllers\Admin\FraudAlertController::class, 'show'])->name('fraud-alerts.show');
+    Route::post('fraud-alerts/{fraudAlert}/resolve', [\App\Http\Controllers\Admin\FraudAlertController::class, 'resolve'])->name('fraud-alerts.resolve');
+
     // Admin Logout
     Route::post('logout', function () {
         Auth::logout();
         request()->session()->invalidate();
         request()->session()->regenerateToken();
+
         return redirect()->route('admin.login');
     })->name('logout');
 });
-

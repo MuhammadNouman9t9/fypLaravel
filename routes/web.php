@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Cart\CartController;
-use App\Http\Controllers\Catalog\CatalogController;
 use App\Http\Controllers\Profile\AddressController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -11,9 +10,6 @@ Route::get('/', \App\Http\Controllers\Landing\HomeController::class)->name('land
 Route::get('/about', \App\Http\Controllers\Landing\AboutController::class)->name('landing.about');
 Route::get('/products', \App\Http\Controllers\Landing\ProductsController::class)->name('landing.products');
 
-// Catalog Routes
-Route::get('/catalog', [CatalogController::class, 'index'])->name('catalog.index');
-Route::get('/catalog/{product:slug}', [CatalogController::class, 'show'])->name('catalog.show');
 Route::view('/projects', 'pages.projects')->name('pages.projects');
 
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -44,7 +40,7 @@ Route::get('/dashboard', function () {
         'user' => $user,
         'orders' => $orders,
     ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', \App\Http\Middleware\EnsureTwoFactorVerified::class])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::post('/support/experts', [\App\Http\Controllers\Support\ExpertConsultationController::class, 'store'])->name('support.experts.store');
@@ -78,5 +74,13 @@ Route::middleware('auth')->group(function () {
 
 // Stripe Webhook (no auth required)
 Route::post('/payment/webhook/stripe', [\App\Http\Controllers\Payment\PaymentController::class, 'webhook'])->name('payment.webhook.stripe');
+
+// Risk Analyzer Routes
+Route::get('/risk-analyzer', [\App\Http\Controllers\RiskAnalyzerController::class, 'index'])->name('risk-analyzer.index');
+Route::post('/risk-analyzer/analyze', [\App\Http\Controllers\RiskAnalyzerController::class, 'analyze'])->name('risk-analyzer.analyze');
+Route::get('/risk-analyzer/{uuid}', [\App\Http\Controllers\RiskAnalyzerController::class, 'show'])->name('risk-analyzer.show');
+
+// Chatbot Routes
+Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
 
 require __DIR__.'/auth.php';

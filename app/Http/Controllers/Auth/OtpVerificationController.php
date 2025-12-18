@@ -12,8 +12,9 @@ class OtpVerificationController extends Controller
 {
     /**
      * Show OTP option selection page.
+     * Automatically sends email OTP and redirects to verification page.
      */
-    public function showSelectOption(Request $request): View|RedirectResponse
+    public function showSelectOption(Request $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -22,43 +23,41 @@ class OtpVerificationController extends Controller
             return redirect(route('dashboard'));
         }
 
-        return view('auth.select-otp-option');
+        // Automatically send OTP via email
+        if ($user->email) {
+            $user->sendOtp('email');
+
+            return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
+        }
+
+        return redirect(route('dashboard'));
     }
 
     /**
      * Handle OTP option selection and send OTP.
+     * Only email channel is supported now.
      */
     public function selectOption(Request $request): RedirectResponse
     {
-        $request->validate([
-            'channel' => ['required', 'in:email,phone'],
-        ]);
-
         $user = $request->user();
-        $channel = $request->channel;
 
-        if ($channel === 'phone' && ! $user->phone) {
-            return back()->withErrors(['channel' => 'Phone number is required to send OTP via phone.']);
-        }
-
-        if ($channel === 'email' && ! $user->email) {
+        if (! $user->email) {
             return back()->withErrors(['channel' => 'Email address is required to send OTP via email.']);
         }
 
-        $otp = $user->sendOtp($channel);
+        $otp = $user->sendOtp('email');
 
         // Log OTP for debugging (only in development)
         if (config('app.debug')) {
             \Illuminate\Support\Facades\Log::info('OTP Generated', [
                 'user_id' => $user->id,
                 'email' => $user->email,
-                'phone' => $user->phone,
-                'channel' => $channel,
+                'channel' => 'email',
                 'otp' => $otp,
             ]);
         }
 
-        return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', $channel);
+        return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
     }
 
     /**

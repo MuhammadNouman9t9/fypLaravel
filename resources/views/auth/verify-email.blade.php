@@ -11,17 +11,17 @@
 
     @if (session('status') == 'otp-sent')
         <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new OTP has been sent to your phone number.') }}
+            {{ __('A new OTP has been sent to your email address.') }}
         </div>
     @endif
 
     <!-- OTP Verification Section -->
     <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <h3 class="text-lg font-medium text-gray-900 mb-2">
-            {{ __('Verify Phone Number with OTP') }}
+            {{ __('Verify Email Address with OTP') }}
         </h3>
         <p class="text-sm text-gray-600 mb-4">
-            {{ __('Enter the 6-digit OTP sent to your phone number.') }}
+            {{ __('Enter the 6-digit OTP sent to your email address.') }}
         </p>
 
         <form method="POST" action="{{ route('otp.verify') }}" class="space-y-4">
@@ -43,7 +43,7 @@
                 />
                 <x-input-error class="mt-2" :messages="$errors->get('otp')" />
                 <p class="mt-1 text-xs text-gray-500">
-                    {{ __('Enter the 6-digit code sent to your phone') }}
+                    {{ __('Enter the 6-digit code sent to your email') }}
                 </p>
             </div>
 

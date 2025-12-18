@@ -10,9 +10,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-gray-50">
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside class="w-64 bg-blue-900 text-white flex-shrink-0">
+        <aside class="w-64 bg-blue-900 text-white flex-shrink-0 min-h-screen">
             <div class="flex flex-col h-full">
                 <div class="p-6 border-b border-blue-800">
                     <h1 class="text-xl font-bold">{{ config('app.name', 'SafeNest') }}</h1>
@@ -43,7 +43,7 @@
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex-1 flex flex-col">
             <!-- Header -->
             <header class="bg-white border-b border-gray-200 px-6 py-4">
                 <div class="flex items-center justify-between">
@@ -56,7 +56,7 @@
             </header>
 
             <!-- Content -->
-            <main class="flex-1 overflow-y-auto p-6">
+            <main class="flex-1 p-6">
                 @if (session('status'))
                     <div class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
                         {{ session('status') }}
@@ -75,6 +75,8 @@
 
                 @yield('content')
             </main>
+
+            <x-footer />
         </div>
     </div>
 </body>

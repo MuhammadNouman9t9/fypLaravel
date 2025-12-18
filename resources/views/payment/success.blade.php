@@ -67,7 +67,7 @@
         </div>
 
         <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
-            <a href="{{ route('catalog.index') }}" class="inline-flex items-center justify-center rounded-full border border-[#111827] px-6 py-3 text-sm font-semibold text-[#111827] hover:bg-[#111827] hover:text-white">
+            <a href="{{ route('landing.products') }}" class="inline-flex items-center justify-center rounded-full border border-[#111827] px-6 py-3 text-sm font-semibold text-[#111827] hover:bg-[#111827] hover:text-white">
                 {{ __('Continue Shopping') }}
             </a>
             @auth

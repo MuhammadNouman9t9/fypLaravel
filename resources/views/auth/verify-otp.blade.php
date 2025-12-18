@@ -9,11 +9,7 @@
         Verify OTP
     </h2>
     <p class="text-gray-600 text-center mb-8">
-        @if (session('channel') === 'email')
-            Enter the 6-digit OTP sent to your email address
-        @else
-            Enter the 6-digit OTP sent to your phone number
-        @endif
+        Enter the 6-digit OTP sent to your email address
     </p>
 
     @if ($errors->any())
@@ -36,7 +32,6 @@
                 id="otp" 
                 name="otp" 
                 type="text" 
-                value="123456"
                 class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-center text-2xl tracking-widest" 
                 placeholder="000000"
                 maxlength="6"

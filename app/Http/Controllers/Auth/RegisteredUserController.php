@@ -60,7 +60,10 @@ class RegisteredUserController extends Controller
         // Store registered email in session for login page suggestion
         $request->session()->put('registered_email', $request->email);
 
-        // Redirect to OTP option selection page
-        return redirect(route('otp.select-option'))->with('show_save_credentials_alert', true);
+        // Automatically send OTP via email
+        $user->sendOtp('email');
+
+        // Redirect directly to OTP verification page
+        return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
     }
 }
