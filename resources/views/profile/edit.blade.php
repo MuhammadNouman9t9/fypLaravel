@@ -7,6 +7,28 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Profile Verification Banner -->
+            @if (!$hasAddress)
+                <div class="mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg shadow-lg p-6 text-white">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0">
+                                <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">{{ __('Complete Your Profile Verification') }}</h3>
+                                <p class="text-purple-100">{{ __('Add your address to complete profile verification and enable checkout.') }}</p>
+                            </div>
+                        </div>
+                        <a href="#address-form" onclick="document.getElementById('address-form').scrollIntoView({behavior: 'smooth', block: 'start'}); return false;" class="bg-white text-purple-600 px-6 py-2 rounded-lg font-semibold hover:bg-purple-50 transition whitespace-nowrap">
+                            {{ __('Verify Now') }}
+                        </a>
+                    </div>
+                </div>
+            @endif
+
             <!-- Quick Actions -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <a href="{{ route('orders.index') }}" class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 hover:shadow-md transition">
@@ -98,7 +120,7 @@
                 </div>
 
                 <!-- Manage Addresses -->
-                <div class="rounded-3xl border border-[#e5e7eb] bg-white p-6 sm:p-8 shadow-sm">
+                <div id="address-form" class="rounded-3xl border border-[#e5e7eb] bg-white p-6 sm:p-8 shadow-sm scroll-mt-6">
                     <div class="max-w-3xl mx-auto">
                         @include('profile.partials.manage-addresses')
                     </div>

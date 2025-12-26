@@ -18,30 +18,6 @@ Route::patch('/cart/{product:slug}', [CartController::class, 'update'])->name('c
 Route::delete('/cart/{product:slug}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout')->middleware('auth');
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    // Load user addresses for profile forms
-    $user->load([
-        'addresses' => fn ($query) => $query
-            ->orderByDesc('is_primary')
-            ->orderBy('created_at'),
-    ]);
-
-    // Load recent orders
-    $orders = \App\Models\Order::query()
-        ->where('user_id', $user->id)
-        ->with(['items.product.media', 'shipments', 'payments'])
-        ->latest('created_at')
-        ->limit(5)
-        ->get();
-
-    return view('dashboard', [
-        'user' => $user,
-        'orders' => $orders,
-    ]);
-})->middleware(['auth', 'verified', \App\Http\Middleware\EnsureTwoFactorVerified::class])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::post('/support/experts', [\App\Http\Controllers\Support\ExpertConsultationController::class, 'store'])->name('support.experts.store');
 

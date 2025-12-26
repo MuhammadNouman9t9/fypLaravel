@@ -90,7 +90,7 @@ class AddressController extends Controller
         $data['is_primary'] = $request->boolean('is_primary');
         $data['country_code'] = strtoupper($data['country_code'] ?? 'US');
         $data['type'] = 'shipping';
-        
+
         // Split full_name into first_name and last_name
         if ($request->has('full_name')) {
             $fullName = trim($request->input('full_name'));
@@ -98,12 +98,12 @@ class AddressController extends Controller
             $data['first_name'] = $nameParts[0] ?? '';
             $data['last_name'] = $nameParts[1] ?? '';
         }
-        
+
         // Store additional notes in meta field
         if ($request->has('additional_notes')) {
             $data['meta'] = ['additional_notes' => $request->input('additional_notes')];
         }
-        
+
         // Remove fields that don't exist in database
         unset($data['full_name'], $data['additional_notes']);
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -68,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
         static::creating(function (self $user): void {
             if (blank($user->uuid)) {
                 $user->uuid = (string) Str::uuid();
+            }
+
+            // Automatically mark email as verified when user is created
+            if (blank($user->email_verified_at)) {
+                $user->email_verified_at = now();
             }
         });
     }
@@ -165,5 +169,15 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return json_decode(decrypt($this->two_factor_recovery_codes), true) ?? [];
+    }
+
+    public function getUnreadSupportMessagesCount(): int
+    {
+        return \App\Models\SupportMessage::whereHas('conversation', function ($query) {
+            $query->where('user_id', $this->id);
+        })
+            ->where('sender_type', 'admin')
+            ->whereNull('read_at')
+            ->count();
     }
 }

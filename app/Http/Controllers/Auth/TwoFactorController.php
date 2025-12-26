@@ -97,7 +97,7 @@ class TwoFactorController extends Controller
         $user = Auth::user();
 
         if (! $user->hasTwoFactorEnabled()) {
-            return redirect()->route('dashboard');
+            return redirect()->route('profile.edit');
         }
 
         return view('auth.two-factor-verify');
@@ -108,7 +108,7 @@ class TwoFactorController extends Controller
         $user = Auth::user();
 
         if (! $user->hasTwoFactorEnabled()) {
-            return redirect()->route('dashboard');
+            return redirect()->route('profile.edit');
         }
 
         $code = $request->validated('code');
@@ -133,7 +133,7 @@ class TwoFactorController extends Controller
         // Mark 2FA as verified for this session
         $request->session()->put('two_factor_verified', true);
 
-        return redirect()->intended(route('dashboard'));
+        return redirect()->intended(route('profile.edit'));
     }
 
     public function showRecoveryCodes(): View

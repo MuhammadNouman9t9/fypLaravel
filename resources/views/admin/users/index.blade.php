@@ -7,7 +7,6 @@
         <h2 class="text-2xl font-semibold text-gray-900">Users</h2>
         <form action="{{ route('admin.users.delete-all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL users? This action cannot be undone!')" class="inline">
             @csrf
-            @method('DELETE')
             <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
                 Delete All Users
             </button>

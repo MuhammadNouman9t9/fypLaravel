@@ -16,10 +16,10 @@ class EmailVerificationPromptController extends Controller
     {
         $user = $request->user();
 
-        // If email is already verified, always redirect to dashboard
+        // If email is already verified, always redirect to profile
         // Phone verification is optional, don't block access if email is verified
         if ($user->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('profile.edit'));
         }
 
         // Show email verification page if email is not verified
