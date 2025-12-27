@@ -76,7 +76,7 @@
                         </button>
                         @if (Route::has('login'))
                             @auth
-                                <a href="{{ route('profile.edit') }}" class="hidden rounded-full border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white md:inline-flex">
+                                <a href="{{ url('/dashboard') }}" class="hidden rounded-full border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white md:inline-flex">
                                     {{ __('Dashboard') }}
                                 </a>
                             @else
@@ -112,8 +112,8 @@
                         <div class="border-t border-[#e5e7eb] pt-3">
                             @if (Route::has('login'))
                                 @auth
-                                    <a href="{{ route('profile.edit') }}" class="block rounded-xl border border-purple-600 px-3 py-2 text-center font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
-                                        {{ __('Profile') }}
+                                    <a href="{{ url('/dashboard') }}" class="block rounded-xl border border-purple-600 px-3 py-2 text-center font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
+                                        {{ __('Dashboard') }}
                                     </a>
                                 @else
                                     <a href="{{ route('login') }}" class="block rounded-xl border border-purple-200 px-3 py-2 text-center font-medium text-[#374151] hover:border-purple-600 hover:text-purple-600">
@@ -244,11 +244,11 @@
                                 @if (Route::has('login'))
                                     @auth
                                         <li>
-                                            <a href="{{ route('profile.edit') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
+                                            <a href="{{ url('/dashboard') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
                                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                                 </svg>
-                                                {{ __('Profile') }}
+                                                {{ __('Dashboard') }}
                                             </a>
                                         </li>
                                     @else

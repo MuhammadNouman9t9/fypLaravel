@@ -32,7 +32,14 @@ class UserController extends Controller
     {
         $user->load('roles', 'addresses', 'orders');
 
-        return view('admin.users.show', compact('user'));
+        $stats = [
+            'total_orders' => $user->orders()->count(),
+            'total_spent' => $user->orders()->sum('grand_total'),
+            'pending_orders' => $user->orders()->where('status', 'pending')->count(),
+            'completed_orders' => $user->orders()->where('status', 'delivered')->count(),
+        ];
+
+        return view('admin.users.show', compact('user', 'stats'));
     }
 
     public function destroy(User $user): RedirectResponse

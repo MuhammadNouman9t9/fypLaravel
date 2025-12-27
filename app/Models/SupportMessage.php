@@ -18,7 +18,6 @@ class SupportMessage extends Model
         'attachments',
         'is_internal',
         'sent_at',
-        'read_at',
     ];
 
     protected function casts(): array
@@ -27,7 +26,6 @@ class SupportMessage extends Model
             'attachments' => 'array',
             'is_internal' => 'boolean',
             'sent_at' => 'datetime',
-            'read_at' => 'datetime',
         ];
     }
 

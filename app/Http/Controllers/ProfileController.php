@@ -30,13 +30,9 @@ class ProfileController extends Controller
             ->limit(5)
             ->get();
 
-        // Check if user has verified profile (has at least one address)
-        $hasAddress = $user->addresses->isNotEmpty();
-
         return view('profile.edit', [
             'user' => $user,
             'orders' => $orders,
-            'hasAddress' => $hasAddress,
         ]);
     }
 

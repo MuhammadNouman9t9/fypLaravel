@@ -3,10 +3,6 @@
 @section('title', 'Orders')
 
 @section('content')
-    <div class="mb-6">
-        <h2 class="text-2xl font-semibold text-gray-900">Orders</h2>
-    </div>
-
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="p-4 border-b border-gray-200">
             <form method="GET" action="{{ route('admin.orders.index') }}" class="flex gap-3 items-center">
@@ -42,6 +38,11 @@
                 </div>
                 
                 <button type="submit" class="px-4 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">Filter</button>
+                @if(request()->hasAny(['search', 'status', 'payment_status', 'user_id']))
+                    <a href="{{ route('admin.orders.index') }}" class="px-4 py-2.5 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        Clear Filters
+                    </a>
+                @endif
             </form>
         </div>
 
@@ -111,7 +112,7 @@
         </div>
 
         <div class="px-6 py-4 border-t border-gray-200">
-            {{ $orders->links() }}
+            {{ $orders->appends(request()->query())->links() }}
         </div>
     </div>
 @endsection

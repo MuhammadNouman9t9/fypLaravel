@@ -10,7 +10,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
 // Admin Login Routes (public, but redirects if already logged in as admin)
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AdminLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [AdminLoginController::class, 'login'])
         ->withoutMiddleware([VerifyCsrfToken::class]);
@@ -21,11 +21,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('products', ProductController::class);
-    
-    // User routes - specific routes before resource to avoid conflicts
-    Route::post('users/delete-all', [UserController::class, 'deleteAll'])->name('users.delete-all');
-    Route::post('users/{user}/restrict', [UserController::class, 'restrict'])->name('users.restrict');
     Route::resource('users', UserController::class)->only(['index', 'show', 'destroy']);
+    Route::post('users/{user}/restrict', [UserController::class, 'restrict'])->name('users.restrict');
+    Route::delete('users/delete-all', [UserController::class, 'deleteAll'])->name('users.delete-all');
 
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');

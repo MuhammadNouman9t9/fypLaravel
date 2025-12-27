@@ -101,4 +101,32 @@ class ProductsController extends Controller
             'usingAI' => $useAIRecommendation,
         ]);
     }
+
+    public function show(Product $product): View
+    {
+        $product->load(['categories', 'media', 'specifications', 'inventory']);
+
+        // Get related products from same category
+        $relatedProducts = Product::query()
+            ->where('id', '!=', $product->id)
+            ->active()
+            ->whereHas('categories', function ($query) use ($product) {
+                $query->whereIn('categories.id', $product->categories->pluck('id'));
+            })
+            ->with(['media', 'categories'])
+            ->limit(4)
+            ->get();
+
+        // Get AI recommendations if available
+        $recommendations = $this->recommendationService->getRecommendations(
+            auth()->user(),
+            ['type' => 'product_detail', 'product_id' => $product->id]
+        )->take(4);
+
+        return view('landing.product-show', [
+            'product' => $product,
+            'relatedProducts' => $relatedProducts,
+            'recommendations' => $recommendations,
+        ]);
+    }
 }

@@ -38,7 +38,11 @@ class OrderController extends Controller
             $query->where('payment_status', $request->payment_status);
         }
 
-        $orders = $query->latest('created_at')->paginate(15);
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->user_id);
+        }
+
+        $orders = $query->latest('created_at')->paginate(15)->withQueryString();
 
         return view('admin.orders.index', compact('orders'));
     }

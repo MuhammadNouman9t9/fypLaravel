@@ -4,16 +4,7 @@
             <!-- Company Info -->
             <div class="space-y-6 lg:col-span-1">
                 <div class="flex items-center">
-                    <img 
-                        src="{{ asset('images/safenest-logo-full.png') }}" 
-                        alt="{{ config('app.name', 'SafeNest') }}" 
-                        class="h-10 object-contain bg-transparent"
-                        loading="lazy"
-                        decoding="async"
-                        fetchpriority="low"
-                        width="120"
-                        height="40"
-                    >
+                    <img src="{{ asset('images/safenest-logo-full.png') }}" alt="{{ config('app.name', 'SafeNest') }}" class="h-10 object-contain">
                 </div>
                 <p class="text-sm leading-relaxed text-gray-300">
                     {{ __('AI-powered intelligent security solutions for your home and business. Protect what matters most with cutting-edge technology.') }}
@@ -91,7 +82,7 @@
                     @if (Route::has('login'))
                         @auth
                             <li>
-                                <a href="{{ route('profile.edit') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
+                                <a href="{{ url('/dashboard') }}" class="text-gray-300 transition hover:text-white hover:translate-x-1 inline-flex items-center gap-2">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                     </svg>

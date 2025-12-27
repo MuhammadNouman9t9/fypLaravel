@@ -40,13 +40,8 @@
                 </a>
                 
                 @auth
-                    <a href="{{ route('support.index') }}" class="relative px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:border-gray-400 transition">
+                    <a href="{{ route('support.index') }}" class="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 border border-gray-300 rounded-md hover:border-gray-400 transition">
                         {{ __('Support') }}
-                        @if (isset($unreadSupportCount) && $unreadSupportCount > 0)
-                            <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1.5 text-[11px] font-semibold text-white">
-                                {{ $unreadSupportCount > 99 ? '99+' : $unreadSupportCount }}
-                            </span>
-                        @endif
                     </a>
                     <a href="{{ route('profile.edit') }}" class="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 transition">
                         {{ __('Profile') }}
@@ -99,13 +94,8 @@
                         @endif
                     </a>
                     @auth
-                        <a href="{{ route('support.index') }}" class="relative px-3 py-2 text-sm font-medium text-gray-600 rounded-md flex items-center justify-between">
-                            <span>{{ __('Support') }}</span>
-                            @if (isset($unreadSupportCount) && $unreadSupportCount > 0)
-                                <span class="inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-2 text-[11px] font-semibold text-white">
-                                    {{ $unreadSupportCount > 99 ? '99+' : $unreadSupportCount }}
-                                </span>
-                            @endif
+                        <a href="{{ route('support.index') }}" class="px-3 py-2 text-sm font-medium text-gray-600 rounded-md">
+                            {{ __('Support') }}
                         </a>
                         <a href="{{ route('profile.edit') }}" class="px-3 py-2 text-sm font-medium text-gray-600 rounded-md">
                             {{ __('Profile') }}

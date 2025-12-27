@@ -287,6 +287,55 @@ class CatalogSeeder extends Seeder
                     'reviews_count' => 1567,
                     'category_slug' => 'digital-doorbells',
                 ],
+                // New Featured Products with Custom Images
+                [
+                    'name' => 'Bullet Outdoor Security Camera',
+                    'brand' => 'SafeNest',
+                    'summary' => 'Weather-resistant bullet-style security camera with night vision and AI motion detection for complete outdoor surveillance.',
+                    'description' => 'Professional-grade bullet security camera designed for outdoor installation. Features IP66 weatherproof rating, full-color night vision, AI-powered motion detection, and red indicator lights showing active status. Perfect for monitoring patios, driveways, and entry points.',
+                    'price' => 189.99,
+                    'compare_at_price' => 229.99,
+                    'rating_average' => 4.8,
+                    'reviews_count' => 2341,
+                    'category_slug' => 'cctv-cameras',
+                    'custom_image' => '/images/products/bullet-security-camera.jpg',
+                ],
+                [
+                    'name' => 'Indoor Spherical Security Camera',
+                    'brand' => 'SafeNest',
+                    'summary' => 'Sleek spherical indoor camera with 360° coverage, two-way audio, and privacy mode for home monitoring.',
+                    'description' => 'Modern spherical security camera perfect for indoor use. Features 1080p HD video, 360° coverage, two-way audio communication, and privacy mode. Red indicator lights show recording status. Compact design blends seamlessly into any home decor.',
+                    'price' => 149.99,
+                    'compare_at_price' => 179.99,
+                    'rating_average' => 4.6,
+                    'reviews_count' => 1876,
+                    'category_slug' => 'cctv-cameras',
+                    'custom_image' => '/images/products/spherical-security-camera.jpg',
+                ],
+                [
+                    'name' => 'Smart Door Camera Pro',
+                    'brand' => 'SafeNest',
+                    'summary' => 'Advanced smart doorbell camera with 2K video, two-way audio, night vision, and package detection.',
+                    'description' => 'Premium smart door camera with 2K HD video resolution, infrared night vision with LED ring illumination, two-way audio communication, and AI-powered package detection. Silver brushed finish with blue status indicator. Perfect for monitoring your front door and receiving visitors.',
+                    'price' => 219.99,
+                    'compare_at_price' => 269.99,
+                    'rating_average' => 4.7,
+                    'reviews_count' => 2156,
+                    'category_slug' => 'digital-doorbells',
+                    'custom_image' => '/images/products/smart-door-camera.jpg',
+                ],
+                [
+                    'name' => 'Biometric Smart Door Lock',
+                    'brand' => 'SafeNest',
+                    'summary' => 'Advanced smart door lock with fingerprint recognition, PIN access, and smartphone app control.',
+                    'description' => 'High-security smart door lock featuring fingerprint biometric scanner, PIN code access, and smartphone app control. Glossy black screen with blue interactive indicator, auto-lock feature, and tamper alerts. Compatible with standard door preparations. Perfect for keyless entry and enhanced home security.',
+                    'price' => 329.99,
+                    'compare_at_price' => 399.99,
+                    'rating_average' => 4.9,
+                    'reviews_count' => 3124,
+                    'category_slug' => 'smart-locks',
+                    'custom_image' => '/images/products/smart-door-lock.jpg',
+                ],
             ];
 
             foreach ($realProducts as $productData) {
@@ -310,7 +359,7 @@ class CatalogSeeder extends Seeder
                     'reviews_count' => $productData['reviews_count'],
                     'availability_status' => 'in_stock',
                     'is_active' => true,
-                    'is_featured' => rand(1, 10) <= 2, // 20% chance
+                    'is_featured' => isset($productData['custom_image']) ? true : (rand(1, 10) <= 2), // Featured if has custom image
                     'warranty_period' => Arr::random(['1 year', '2 years', '3 years']),
                     'return_policy' => '30-day returns',
                     'specifications_snapshot' => [],
@@ -324,15 +373,31 @@ class CatalogSeeder extends Seeder
                     ],
                 ]);
 
-                $this->seedMedia($product, $productData['category_slug']);
+                $this->seedMedia($product, $productData['category_slug'], $productData['custom_image'] ?? null);
                 $this->seedSpecifications($product, $productData['category_slug']);
                 $this->seedInventory($product);
             }
         });
     }
 
-    protected function seedMedia(Product $product, string $categorySlug = 'cctv-cameras'): void
+    protected function seedMedia(Product $product, string $categorySlug = 'cctv-cameras', ?string $customImage = null): void
     {
+        // Use custom image if provided
+        if ($customImage) {
+            ProductMedia::create([
+                'product_id' => $product->id,
+                'type' => 'image',
+                'file_path' => $customImage,
+                'thumbnail_path' => $customImage,
+                'alt_text' => "{$product->name}",
+                'position' => 0,
+                'is_primary' => true,
+                'meta' => ['source' => 'custom'],
+            ]);
+
+            return;
+        }
+
         $imageMap = [
             'cctv-cameras' => [
                 'https://images.unsplash.com/photo-1580894908361-967195033215?auto=format&fit=crop&w=1200&q=80',

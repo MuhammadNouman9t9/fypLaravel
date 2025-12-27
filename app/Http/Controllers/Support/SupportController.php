@@ -30,12 +30,6 @@ class SupportController extends Controller
 
         $conversation->load('messages.sender', 'assignedExpert');
 
-        // Mark all admin messages in this conversation as read
-        SupportMessage::where('support_conversation_id', $conversation->id)
-            ->where('sender_type', 'admin')
-            ->whereNull('read_at')
-            ->update(['read_at' => now()]);
-
         return view('support.show', compact('conversation'));
     }
 

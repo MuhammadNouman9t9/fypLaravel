@@ -231,41 +231,45 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                     @foreach($products as $product)
                         <article class="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                            <div class="relative block h-56 overflow-hidden bg-[#f8fafc]">
-                                @if ($product->cover_image_url)
-                                    <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
-                                @else
-                                    <div class="flex h-full w-full items-center justify-center text-sm text-[#94a3b8]">
-                                        {{ __('Image coming soon') }}
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="flex flex-1 flex-col gap-3 p-5">
-                                <div class="flex items-center justify-between text-xs uppercase tracking-wide text-[#6366f1]">
-                                    <span>{{ $product->primary_category_name ?? __('All smart security') }}</span>
-                                    <span>{{ $product->brand }}</span>
+                            <a href="{{ route('landing.product.show', $product) }}" class="block">
+                                <div class="relative block h-56 overflow-hidden bg-[#f8fafc]">
+                                    @if ($product->cover_image_url)
+                                        <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                                    @else
+                                        <div class="flex h-full w-full items-center justify-center text-sm text-[#94a3b8]">
+                                            {{ __('Image coming soon') }}
+                                        </div>
+                                    @endif
                                 </div>
-                                <span class="text-lg font-semibold text-[#0f172a]">{{ $product->name }}</span>
-                                <p class="line-clamp-2 text-sm leading-relaxed text-[#475569]">{{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 80) }}</p>
-                                <div class="mt-auto space-y-3 pt-2">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-base font-semibold text-purple-600">${{ number_format($product->price, 2) }}</p>
-                                        <div class="flex items-center gap-1 text-xs font-medium text-[#f97316]">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                            </svg>
-                                            <span>{{ number_format($product->rating_average, 1) }}</span>
+                                <div class="flex flex-1 flex-col gap-3 p-5">
+                                    <div class="flex items-center justify-between text-xs uppercase tracking-wide text-[#6366f1]">
+                                        <span>{{ $product->primary_category_name ?? __('All smart security') }}</span>
+                                        <span>{{ $product->brand }}</span>
+                                    </div>
+                                    <span class="text-lg font-semibold text-[#0f172a]">{{ $product->name }}</span>
+                                    <p class="line-clamp-2 text-sm leading-relaxed text-[#475569]">{{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 80) }}</p>
+                                    <div class="mt-auto space-y-3 pt-2">
+                                        <div class="flex items-center justify-between">
+                                            <p class="text-base font-semibold text-purple-600">${{ number_format($product->price, 2) }}</p>
+                                            <div class="flex items-center gap-1 text-xs font-medium text-[#f97316]">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20">
+                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                </svg>
+                                                <span>{{ number_format($product->rating_average, 1) }}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <form action="{{ route('cart.store') }}" method="POST" class="add-to-cart-form flex items-center justify-between gap-3" data-product-name="{{ $product->name }}">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                        <input type="hidden" name="quantity" value="1">
-                                        <button type="submit" class="flex-1 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700">
-                                            {{ __('Add to cart') }}
-                                        </button>
-                                    </form>
                                 </div>
+                            </a>
+                            <div class="px-5 pb-5">
+                                <form action="{{ route('cart.store') }}" method="POST" class="add-to-cart-form" data-product-name="{{ $product->name }}" onclick="event.stopPropagation()">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="w-full rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700">
+                                        {{ __('Add to cart') }}
+                                    </button>
+                                </form>
                             </div>
                         </article>
                     @endforeach

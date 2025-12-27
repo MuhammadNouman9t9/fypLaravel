@@ -21,7 +21,7 @@
         >
             @switch(session('status'))
                 @case('address-created')
-                    {{ __('Address saved successfully. Your profile is now verified!') }}
+                    {{ __('Address saved successfully.') }}
                     @break
                 @case('address-updated')
                     {{ __('Address updated successfully.') }}

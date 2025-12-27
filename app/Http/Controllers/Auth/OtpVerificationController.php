@@ -18,9 +18,9 @@ class OtpVerificationController extends Controller
     {
         $user = $request->user();
 
-        // If already verified, redirect to profile
+        // If already verified, redirect to dashboard
         if ($user && $user->phone_verified_at) {
-            return redirect(route('profile.edit'));
+            return redirect(route('dashboard'));
         }
 
         // Automatically send OTP via email
@@ -30,7 +30,7 @@ class OtpVerificationController extends Controller
             return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
         }
 
-        return redirect(route('profile.edit'));
+        return redirect(route('dashboard'));
     }
 
     /**
@@ -83,9 +83,9 @@ class OtpVerificationController extends Controller
     {
         $user = $request->user();
 
-        // If already verified, redirect to profile
+        // If already verified, redirect to dashboard
         if ($user && $user->phone_verified_at) {
-            return redirect(route('profile.edit'));
+            return redirect(route('dashboard'));
         }
 
         // Get the latest unused OTP for the logged-in user

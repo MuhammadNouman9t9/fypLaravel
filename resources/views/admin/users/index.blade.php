@@ -3,16 +3,6 @@
 @section('title', 'Users')
 
 @section('content')
-    <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-semibold text-gray-900">Users</h2>
-        <form action="{{ route('admin.users.delete-all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL users? This action cannot be undone!')" class="inline">
-            @csrf
-            <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                Delete All Users
-            </button>
-        </form>
-    </div>
-
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <div class="p-4 border-b border-gray-200">
             <form method="GET" action="{{ route('admin.users.index') }}" class="flex gap-4">
@@ -70,5 +60,19 @@
         <div class="px-6 py-4 border-t border-gray-200">
             {{ $users->links() }}
         </div>
+    </div>
+
+    <!-- Delete All Users Button - Moved to Bottom -->
+    <div class="mt-6 flex justify-end">
+        <form action="{{ route('admin.users.delete-all') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete ALL users? This action cannot be undone!')" class="inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete All Users
+            </button>
+        </form>
     </div>
 @endsection

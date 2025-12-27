@@ -153,28 +153,4 @@
             </div>
         </div>
     </div>
-
-    <div class="mt-6 bg-white rounded-lg shadow">
-        <div class="p-6 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-gray-900">Quick Stats</h3>
-        </div>
-        <div class="p-6">
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div>
-                    <p class="text-sm text-gray-600">Pending Orders</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['pending_orders']) }}</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Open Support Tickets</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ number_format($stats['open_support_tickets']) }}</p>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-600">Average Order Value</p>
-                    <p class="text-2xl font-bold text-gray-900">
-                        ${{ $stats['total_orders'] > 0 ? number_format($stats['total_revenue'] / $stats['total_orders'], 2) : '0.00' }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection

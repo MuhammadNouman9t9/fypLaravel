@@ -19,17 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Share unread support messages count with all views for authenticated users
-        view()->composer('*', function ($view) {
-            if (auth()->check() && auth()->user()) {
-                try {
-                    $view->with('unreadSupportCount', auth()->user()->getUnreadSupportMessagesCount());
-                } catch (\Exception $e) {
-                    $view->with('unreadSupportCount', 0);
-                }
-            } else {
-                $view->with('unreadSupportCount', 0);
-            }
-        });
+        //
     }
 }

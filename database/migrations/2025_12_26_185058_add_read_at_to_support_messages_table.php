@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('support_messages', function (Blueprint $table) {
-            $table->timestamp('read_at')->nullable()->after('sent_at');
+            //
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('support_messages', function (Blueprint $table) {
-            $table->dropColumn('read_at');
+            //
         });
     }
 };
