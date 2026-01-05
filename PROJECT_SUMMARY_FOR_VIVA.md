@@ -579,3 +579,8 @@ The platform is production-ready with all core features implemented and tested.
 
 **Good luck with your viva! 🎓**
 
+
+
+
+
+

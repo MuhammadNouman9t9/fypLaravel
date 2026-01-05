@@ -28,3 +28,8 @@ Please add the following product images to this directory:
 
 The seeder will automatically link these images to the products.
 
+
+
+
+
+

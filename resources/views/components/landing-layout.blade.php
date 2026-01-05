@@ -79,9 +79,17 @@
                                 <a href="{{ url('/dashboard') }}" class="hidden rounded-full border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white md:inline-flex">
                                     {{ __('Dashboard') }}
                                 </a>
+                                @if (auth()->user()->isAdmin())
+                                    <a href="{{ route('admin.dashboard') }}" class="hidden rounded-full border border-blue-600 bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 md:inline-flex">
+                                        {{ __('Admin') }}
+                                    </a>
+                                @endif
                             @else
                                 <a href="{{ route('login') }}" class="hidden rounded-full border border-purple-200 px-4 py-2 text-sm font-medium text-[#374151] hover:border-purple-600 hover:text-purple-600 md:inline-flex">
                                     {{ __('Log in') }}
+                                </a>
+                                <a href="{{ route('admin.login') }}" class="hidden rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 md:inline-flex">
+                                    {{ __('Admin Login') }}
                                 </a>
                                 @if (Route::has('register'))
                                     <a href="{{ route('register') }}" class="hidden rounded-full border border-purple-600 bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 md:inline-flex">
@@ -115,9 +123,17 @@
                                     <a href="{{ url('/dashboard') }}" class="block rounded-xl border border-purple-600 px-3 py-2 text-center font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
                                         {{ __('Dashboard') }}
                                     </a>
+                                    @if (auth()->user()->isAdmin())
+                                        <a href="{{ route('admin.dashboard') }}" class="mt-2 block rounded-xl border border-blue-600 bg-blue-600 px-3 py-2 text-center font-semibold text-white hover:bg-blue-700">
+                                            {{ __('Admin Panel') }}
+                                        </a>
+                                    @endif
                                 @else
                                     <a href="{{ route('login') }}" class="block rounded-xl border border-purple-200 px-3 py-2 text-center font-medium text-[#374151] hover:border-purple-600 hover:text-purple-600">
                                         {{ __('Log in') }}
+                                    </a>
+                                    <a href="{{ route('admin.login') }}" class="mt-2 block rounded-xl border border-gray-300 px-3 py-2 text-center font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50">
+                                        {{ __('Admin Login') }}
                                     </a>
                                     @if (Route::has('register'))
                                         <a href="{{ route('register') }}" class="mt-2 block rounded-xl border border-purple-600 bg-purple-600 px-3 py-2 text-center font-semibold text-white hover:bg-purple-700">
