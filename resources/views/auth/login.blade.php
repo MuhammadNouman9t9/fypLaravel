@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Shield Icon -->
     <div class="flex justify-center mb-6">
-        <x-shield-logo class="h-16 w-16 text-blue-600" />
+        <x-shield-logo class="h-16 w-16 text-purple-600" />
     </div>
 
     <!-- Welcome Heading -->
@@ -24,7 +24,7 @@
             <x-input-label for="email" :value="__('Email')" class="font-semibold text-gray-900" />
             <x-text-input 
                 id="email" 
-                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500" 
+                class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500" 
                 type="email" 
                 name="email" 
                 :value="old('email', session('registered_email'))" 
@@ -42,7 +42,7 @@
             <div class="relative">
                 <x-text-input 
                     id="password" 
-                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10"
+                    class="block mt-2 w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 pr-10"
                     type="password"
                     name="password"
                     required 
@@ -64,12 +64,12 @@
         <!-- Remember Me -->
         <div class="flex items-center justify-between">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500" name="remember">
+                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-purple-600 focus:ring-purple-500" name="remember">
                 <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
             </label>
 
             @if (Route::has('password.request'))
-                <a class="text-sm text-blue-600 hover:text-blue-700" href="{{ route('password.request') }}">
+                <a class="text-sm text-purple-600 hover:text-purple-700" href="{{ route('password.request') }}">
                     {{ __('Forgot password?') }}
                 </a>
             @endif
@@ -77,7 +77,7 @@
 
         <!-- Login Button -->
         <div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition">
+            <button type="submit" class="w-full bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition">
                 {{ __('Login') }}
             </button>
         </div>
@@ -87,7 +87,7 @@
     <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
             Don't have an account?
-            <a href="{{ route('register') }}" class="text-blue-600 font-semibold hover:text-blue-700">
+            <a href="{{ route('register') }}" class="text-purple-600 font-semibold hover:text-purple-700">
                 Sign up
             </a>
         </p>
