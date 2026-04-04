@@ -7,20 +7,18 @@
 
         <title>{{ config('app.name', 'SafeNest') }}</title>
 
-        <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <x-layout-assets />
     </head>
-    <body class="font-sans text-gray-900 antialiased bg-gray-50">
-        <div class="min-h-screen flex flex-col">
+    <body class="bg-light">
+        <div class="min-vh-100 d-flex flex-column">
             <x-landing-nav />
 
-            <div class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-                <div class="w-full sm:max-w-md">
-                    <div class="bg-white shadow-lg rounded-2xl px-8 py-10">
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center py-5 px-3">
+                <div class="w-100" style="max-width: 28rem;">
+                    <div class="bg-white shadow rounded-4 p-4 p-md-5">
                         {{ $slot }}
                     </div>
                 </div>

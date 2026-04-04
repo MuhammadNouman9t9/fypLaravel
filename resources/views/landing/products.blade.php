@@ -1,448 +1,102 @@
 <x-landing-layout title="Products">
-    <div x-data="{ filterOpen: false }" class="bg-white min-h-screen py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header Section -->
-            <div class="text-center mb-8">
-                <!-- Products Badge -->
-                <div class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 border border-purple-200 text-purple-600 rounded-full mb-6">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    <span class="text-sm font-semibold uppercase">Products</span>
-                </div>
-
-                <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-                    Smart Security Products
-                </h1>
-                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Browse our AI-powered security solutions tailored for your home
-                </p>
+    <div class="bg-white py-5">
+        <div class="container">
+            <div class="mb-4">
+                <h1 class="h2 fw-semibold text-dark">{{ __('Products') }}</h1>
+                <p class="text-secondary small mt-1 mb-0">{{ __('Browse smart security products and add them to your cart.') }}</p>
             </div>
 
-
-            <!-- AI-Powered Recommendation Filter -->
-            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-8 border border-purple-200">
-                <div class="flex items-center gap-3 mb-4">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                    </svg>
-                    <h3 class="text-lg font-semibold text-gray-900">AI-Powered Product Recommendations</h3>
-                </div>
-                <p class="text-sm text-gray-600 mb-4">Tell us about your property and budget, and we'll suggest the best security products for you.</p>
-                
-                <form method="GET" action="{{ route('landing.products') }}" class="space-y-4">
-                    <input type="hidden" name="ai_recommend" value="1">
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <!-- Property Type -->
-                        <div>
-                            <label for="property_type" class="block text-sm font-medium text-gray-700 mb-2">
-                                Property Type <span class="text-red-500">*</span>
-                            </label>
-                            <select name="property_type" id="property_type" required class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white">
-                                <option value="">Select property type</option>
-                                <option value="apartment" {{ request('property_type') === 'apartment' ? 'selected' : '' }}>Apartment</option>
-                                <option value="condo" {{ request('property_type') === 'condo' ? 'selected' : '' }}>Condo</option>
-                                <option value="house" {{ request('property_type') === 'house' ? 'selected' : '' }}>House</option>
-                                <option value="villa" {{ request('property_type') === 'villa' ? 'selected' : '' }}>Villa</option>
-                                <option value="office" {{ request('property_type') === 'office' ? 'selected' : '' }}>Office</option>
-                            </select>
-                        </div>
-
-                        <!-- Budget -->
-                        <div>
-                            <label for="budget" class="block text-sm font-medium text-gray-700 mb-2">
-                                Budget ($) <span class="text-red-500">*</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                name="budget" 
-                                id="budget" 
-                                value="{{ request('budget') }}"
-                                placeholder="e.g., 5000"
-                                min="0"
-                                step="100"
-                                required
-                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
-                            />
-                        </div>
-
-                        <!-- Property Size (Optional) -->
-                        <div>
-                            <label for="property_size" class="block text-sm font-medium text-gray-700 mb-2">
-                                Property Size (sq ft) <span class="text-gray-400 text-xs">(Optional)</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                name="property_size" 
-                                id="property_size" 
-                                value="{{ request('property_size') }}"
-                                placeholder="e.g., 1500"
-                                min="0"
-                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Entry Points -->
-                        <div>
-                            <label for="entry_points" class="block text-sm font-medium text-gray-700 mb-2">
-                                Number of Entry Points <span class="text-gray-400 text-xs">(Optional)</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                name="entry_points" 
-                                id="entry_points" 
-                                value="{{ request('entry_points') }}"
-                                placeholder="e.g., 2"
-                                min="0"
-                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
-                            />
-                        </div>
-
-                        <!-- Exit Points -->
-                        <div>
-                            <label for="exit_points" class="block text-sm font-medium text-gray-700 mb-2">
-                                Number of Exit Points <span class="text-gray-400 text-xs">(Optional)</span>
-                            </label>
-                            <input 
-                                type="number" 
-                                name="exit_points" 
-                                id="exit_points" 
-                                value="{{ request('exit_points') }}"
-                                placeholder="e.g., 2"
-                                min="0"
-                                class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
-                            />
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button type="submit" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                            </svg>
-                            Get AI Recommendations
-                        </button>
-                        
-                        @if(request('ai_recommend'))
-                            <a href="{{ route('landing.products') }}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition bg-white">
-                                Clear AI Filters
-                            </a>
-                        @endif
-                    </div>
-                </form>
-            </div>
-
-            <!-- Advanced Filters Panel -->
-            <div 
-                x-show="filterOpen" 
-                x-cloak
-                x-transition
-                class="bg-gray-100 rounded-lg p-6 mb-8"
-            >
-                <form method="GET" action="{{ route('landing.products') }}" class="flex flex-col sm:flex-row gap-4 items-end">
-                    <!-- Preserve category if set -->
-                    @if(request('category'))
-                        <input type="hidden" name="category" value="{{ request('category') }}">
-                    @endif
-
-                    <!-- Company/Brand Filter -->
-                    <div class="flex-1 w-full">
-                        <label for="company" class="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
-                        <div class="relative">
-                            <select name="company" id="company" class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 appearance-none bg-white pr-8">
-                                <option value="">All Companies</option>
-                                @foreach($brands as $brand)
-                                    <option value="{{ $brand }}" {{ request('company') === $brand ? 'selected' : '' }}>
-                                        {{ $brand }}
-                                    </option>
+            <form method="GET" action="{{ route('landing.products', absolute: false) }}" class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <label for="category" class="form-label">{{ __('Category') }}</label>
+                            <select id="category" name="category" class="form-select">
+                                <option value="">{{ __('All categories') }}</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->slug }}" @selected(request('category') === $category->slug)>{{ $category->name }}</option>
                                 @endforeach
                             </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                                </svg>
-                            </div>
                         </div>
-                    </div>
 
-                    <!-- Max Quantity Filter -->
-                    <div class="flex-1 w-full">
-                        <label for="max_quantity" class="block text-sm font-medium text-gray-700 mb-2">Max Quantity</label>
-                        <input 
-                            type="number" 
-                            name="max_quantity" 
-                            id="max_quantity" 
-                            value="{{ request('max_quantity') }}"
-                            placeholder="Any"
-                            min="0"
-                            class="w-full rounded-lg border-gray-300 focus:border-purple-500 focus:ring-purple-500 bg-white"
-                        />
-                    </div>
-
-                    <!-- Filter Button -->
-                    <div class="w-full sm:w-auto">
-                        <button type="submit" class="w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                            </svg>
-                            Apply Filter
-                        </button>
-                    </div>
-
-                    <!-- Clear Filters -->
-                    @if(request()->hasAny(['company', 'max_quantity']))
-                        <div class="w-full sm:w-auto">
-                            <a href="{{ route('landing.products', request()->only('category')) }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition bg-white">
-                                Clear
-                            </a>
+                        <div class="col-md-3">
+                            <label for="company" class="form-label">{{ __('Company') }}</label>
+                            <select id="company" name="company" class="form-select">
+                                <option value="">{{ __('All') }}</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand }}" @selected(request('company') === $brand)>{{ $brand }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                    @endif
-                </form>
-            </div>
 
-            <!-- AI Recommendation Notice -->
-            @if($usingAI ?? false)
-                <div class="mb-6 rounded-lg bg-purple-50 border border-purple-200 px-4 py-3">
-                    <div class="flex items-center gap-3">
-                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        <div>
-                            <p class="text-sm font-semibold text-purple-900">AI Recommendations Active</p>
-                            <p class="text-xs text-purple-700">
-                                Showing products recommended for 
-                                @if(request('property_type'))
-                                    <strong>{{ ucfirst(request('property_type')) }}</strong>
-                                @endif
-                                @if(request('budget'))
-                                    with a budget of <strong>${{ number_format(request('budget'), 2) }}</strong>
-                                @endif
-                            </p>
+                        <div class="col-md-3">
+                            <label for="max_quantity" class="form-label">{{ __('Max quantity') }}</label>
+                            <input
+                                id="max_quantity"
+                                name="max_quantity"
+                                type="number"
+                                min="0"
+                                value="{{ request('max_quantity') }}"
+                                placeholder="{{ __('Any') }}"
+                                class="form-control"
+                            />
+                        </div>
+
+                        <div class="col-12 d-flex flex-wrap align-items-center gap-2">
+                            <button type="submit" class="btn btn-primary">{{ __('Apply') }}</button>
+                            <a href="{{ route('landing.products', absolute: false) }}" class="btn btn-link text-decoration-none">{{ __('Clear') }}</a>
                         </div>
                     </div>
                 </div>
-            @endif
+            </form>
 
-            <!-- Products Grid -->
-            @if($products->count() > 0)
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    @foreach($products as $product)
-                        <article class="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                            <a href="{{ route('landing.product.show', $product) }}" class="block">
-                                <div class="relative block h-56 overflow-hidden bg-[#f8fafc]">
-                                    @if ($product->cover_image_url)
-                                        <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
-                                    @else
-                                        <div class="flex h-full w-full items-center justify-center text-sm text-[#94a3b8]">
-                                            {{ __('Image coming soon') }}
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="flex flex-1 flex-col gap-3 p-5">
-                                    <div class="flex items-center justify-between text-xs uppercase tracking-wide text-[#6366f1]">
-                                        <span>{{ $product->primary_category_name ?? __('All smart security') }}</span>
-                                        <span>{{ $product->brand }}</span>
+            @if ($products->count() === 0)
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <p class="text-secondary mb-0">{{ __('No products found.') }}</p>
+                    </div>
+                </div>
+            @else
+                <div class="row g-4">
+                    @foreach ($products as $product)
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <article class="card h-100 shadow-sm">
+                                <a href="{{ route('landing.product.show', $product) }}" class="text-decoration-none text-dark">
+                                    <div class="ratio ratio-4x3 bg-light">
+                                        @if ($product->cover_image_url)
+                                            <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="object-fit-cover rounded-top" />
+                                        @else
+                                            <div class="d-flex align-items-center justify-content-center text-secondary small">{{ __('No image') }}</div>
+                                        @endif
                                     </div>
-                                    <span class="text-lg font-semibold text-[#0f172a]">{{ $product->name }}</span>
-                                    <p class="line-clamp-2 text-sm leading-relaxed text-[#475569]">{{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 80) }}</p>
-                                    <div class="mt-auto space-y-3 pt-2">
-                                        <div class="flex items-center justify-between">
-                                            <p class="text-base font-semibold text-purple-600">${{ number_format($product->price, 2) }}</p>
-                                            <div class="flex items-center gap-1 text-xs font-medium text-[#f97316]">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 fill-current" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
-                                                <span>{{ number_format($product->rating_average, 1) }}</span>
-                                            </div>
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start gap-2 small text-secondary mb-2">
+                                            <span class="text-truncate">{{ $product->brand ?: __('—') }}</span>
+                                            <span class="flex-shrink-0 fw-semibold text-primary">${{ number_format($product->price, 2) }}</span>
                                         </div>
+                                        <h3 class="h6 fw-semibold line-clamp-2">{{ $product->name }}</h3>
+                                        <p class="small text-secondary line-clamp-2 mb-0">
+                                            {{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 90) }}
+                                        </p>
                                     </div>
+                                </a>
+                                <div class="card-footer bg-white border-top-0 pt-0">
+                                    <form action="{{ route('cart.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="btn btn-primary w-100">{{ __('Add to cart') }}</button>
+                                    </form>
                                 </div>
-                            </a>
-                            <div class="px-5 pb-5">
-                                <form action="{{ route('cart.store') }}" method="POST" class="add-to-cart-form" data-product-name="{{ $product->name }}" onclick="event.stopPropagation()">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="w-full rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-purple-700">
-                                        {{ __('Add to cart') }}
-                                    </button>
-                                </form>
-                            </div>
-                        </article>
+                            </article>
+                        </div>
                     @endforeach
                 </div>
 
-                <!-- Pagination with Arrows -->
-                @if($products->hasPages())
-                    <div class="flex justify-end items-center gap-4">
-                        <!-- Previous Button -->
-                        @if($products->onFirstPage())
-                            <button disabled class="px-4 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed bg-white">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </button>
-                        @else
-                            <a href="{{ $products->previousPageUrl() }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 bg-white transition">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                </svg>
-                            </a>
-                        @endif
-
-                        <!-- Page Info -->
-                        <span class="text-sm text-gray-600">
-                            Page {{ $products->currentPage() }} of {{ $products->lastPage() }}
-                        </span>
-
-                        <!-- Next Button -->
-                        @if($products->hasMorePages())
-                            <a href="{{ $products->nextPageUrl() }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 bg-white transition">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        @else
-                            <button disabled class="px-4 py-2 border border-gray-300 rounded-lg text-gray-400 cursor-not-allowed bg-white">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        @endif
-                    </div>
-                @endif
-            @else
-                <div class="text-center py-12">
-                    <p class="text-gray-600 text-lg mb-4">No products found matching your filters.</p>
-                    <a href="{{ route('landing.products') }}" class="text-purple-600 hover:text-purple-700 font-semibold">Clear filters</a>
+                <div class="mt-4">
+                    {{ $products->links() }}
                 </div>
             @endif
         </div>
     </div>
-
-    <!-- Cart Notification Popup -->
-    <div id="cart-notification" class="fixed top-20 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 hidden transform transition-all duration-300 -translate-x-full">
-        <div class="flex items-center gap-3">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            <div>
-                <p class="font-semibold" id="cart-notification-text">Item added to cart!</p>
-                <p class="text-sm text-green-100">Cart updated successfully</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Handle add to cart form submission
-        document.querySelectorAll('.add-to-cart-form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(this);
-                const productName = this.dataset.productName;
-                const submitButton = this.querySelector('button[type="submit"]');
-                const originalText = submitButton.innerHTML;
-                
-                // Disable button
-                submitButton.disabled = true;
-                submitButton.innerHTML = '<svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
-                
-                fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => {
-                    if (response.headers.get('content-type')?.includes('application/json')) {
-                        return response.json();
-                    }
-                    return { redirect: response.url };
-                })
-                .then(data => {
-                    // Show notification
-                    const notification = document.getElementById('cart-notification');
-                    const notificationText = document.getElementById('cart-notification-text');
-                    notificationText.textContent = productName + ' added to cart!';
-                    notification.classList.remove('hidden', '-translate-x-full');
-                    notification.classList.add('translate-x-0');
-                    
-                    // Update cart count in navbar
-                    if (data.cart_count) {
-                        updateCartCount(data.cart_count);
-                    }
-                    
-                    // Hide notification after 3 seconds
-                    setTimeout(() => {
-                        notification.classList.remove('translate-x-0');
-                        notification.classList.add('-translate-x-full');
-                        setTimeout(() => {
-                            notification.classList.add('hidden');
-                        }, 300);
-                    }, 3000);
-                    
-                    // Redirect after showing notification
-                    setTimeout(() => {
-                        if (data.redirect) {
-                            window.location.href = data.redirect;
-                        } else {
-                            window.location.reload();
-                        }
-                    }, 1000);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    submitButton.disabled = false;
-                    submitButton.innerHTML = originalText;
-                    // Fallback to normal form submission
-                    this.submit();
-                });
-            });
-        });
-        
-        function updateCartCount(count) {
-            // Update desktop cart badge
-            const desktopCartLink = document.querySelector('a[data-cart-link="desktop"]');
-            if (desktopCartLink) {
-                let badge = desktopCartLink.querySelector('span.rounded-full');
-                if (!badge && count > 0) {
-                    badge = document.createElement('span');
-                    badge.className = 'absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-1 text-[11px] font-semibold text-white';
-                    desktopCartLink.appendChild(badge);
-                }
-                if (badge) {
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.style.display = '';
-                    } else {
-                        badge.remove();
-                    }
-                }
-            }
-
-            // Update mobile cart badge
-            const mobileCartLink = document.querySelector('a[data-cart-link="mobile"]');
-            if (mobileCartLink) {
-                let badge = mobileCartLink.querySelector('span.rounded-full') || mobileCartLink.querySelector('span.ml-auto');
-                if (!badge && count > 0) {
-                    badge = document.createElement('span');
-                    badge.className = 'ml-auto inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-purple-600 px-2 text-[11px] font-semibold text-white';
-                    mobileCartLink.appendChild(badge);
-                }
-                if (badge) {
-                    if (count > 0) {
-                        badge.textContent = count;
-                        badge.style.display = '';
-                    } else {
-                        badge.remove();
-                    }
-                }
-            }
-        }
-    </script>
 </x-landing-layout>

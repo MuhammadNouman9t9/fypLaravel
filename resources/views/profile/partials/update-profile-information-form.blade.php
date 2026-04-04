@@ -1,100 +1,100 @@
 <section>
-    <header>
-        <h2 class="text-lg font-semibold text-[#0f172a]">
+    <header class="mb-3">
+        <h2 class="h5 fw-semibold text-dark">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-[#475569]">
+        <p class="small text-secondary">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-3">
         @csrf
         @method('patch')
 
-        <div class="grid gap-6 md:grid-cols-2">
-            <div>
-                <label for="first_name" class="block text-sm font-medium text-[#1f2937]">{{ __('First name') }}</label>
-                <input 
-                    id="first_name" 
-                    name="first_name" 
-                    type="text" 
-                    class="mt-2 w-full rounded-xl border border-purple-200 bg-white px-3 py-2 text-sm text-[#111827] focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-600/10" 
-                    value="{{ old('first_name', $user->first_name) }}" 
-                    required 
-                    autofocus 
-                    autocomplete="given-name" 
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="first_name" class="form-label">{{ __('First name') }}</label>
+                <input
+                    id="first_name"
+                    name="first_name"
+                    type="text"
+                    class="form-control @error('first_name') is-invalid @enderror"
+                    value="{{ old('first_name', $user->first_name) }}"
+                    required
+                    autofocus
+                    autocomplete="given-name"
                 />
                 <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
             </div>
-            <div>
-                <label for="last_name" class="block text-sm font-medium text-[#1f2937]">{{ __('Last name') }}</label>
-                <input 
-                    id="last_name" 
-                    name="last_name" 
-                    type="text" 
-                    class="mt-2 w-full rounded-xl border border-purple-200 bg-white px-3 py-2 text-sm text-[#111827] focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-600/10" 
-                    value="{{ old('last_name', $user->last_name) }}" 
-                    required 
-                    autocomplete="family-name" 
+            <div class="col-md-6">
+                <label for="last_name" class="form-label">{{ __('Last name') }}</label>
+                <input
+                    id="last_name"
+                    name="last_name"
+                    type="text"
+                    class="form-control @error('last_name') is-invalid @enderror"
+                    value="{{ old('last_name', $user->last_name) }}"
+                    required
+                    autocomplete="family-name"
                 />
                 <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
             </div>
         </div>
 
-        <div>
-            <label for="email" class="block text-sm font-medium text-[#1f2937]">{{ __('Email') }}</label>
-            <input 
-                id="email" 
-                name="email" 
-                type="email" 
-                class="mt-2 w-full rounded-xl border border-[#d1d5db] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#111827] focus:outline-none focus:ring-2 focus:ring-[#111827]/10" 
-                value="{{ old('email', $user->email) }}" 
-                required 
-                autocomplete="username" 
+        <div class="mb-3 mt-3">
+            <label for="email" class="form-label">{{ __('Email') }}</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                class="form-control @error('email') is-invalid @enderror"
+                value="{{ old('email', $user->email) }}"
+                required
+                autocomplete="username"
             />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
-        <div>
-            <label for="phone" class="block text-sm font-medium text-[#1f2937]">{{ __('Phone number') }}</label>
-            <input 
-                id="phone" 
-                name="phone" 
-                type="tel" 
-                class="mt-2 w-full rounded-xl border border-[#d1d5db] bg-white px-3 py-2 text-sm text-[#111827] focus:border-[#111827] focus:outline-none focus:ring-2 focus:ring-[#111827]/10" 
-                value="{{ old('phone', $user->phone) }}" 
-                required 
-                autocomplete="tel" 
+        <div class="mb-3">
+            <label for="phone" class="form-label">{{ __('Phone number') }}</label>
+            <input
+                id="phone"
+                name="phone"
+                type="tel"
+                class="form-control @error('phone') is-invalid @enderror"
+                value="{{ old('phone', $user->phone) }}"
+                required
+                autocomplete="tel"
             />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
             @if (is_null($user->phone_verified_at))
-                <p class="mt-2 text-sm text-[#6b7280]">
+                <p class="small text-secondary mt-2 mb-0">
                     {{ __('We\'ll prompt you to verify this number before scheduling deliveries.') }}
                 </p>
             @endif
         </div>
 
-        <div class="flex items-center gap-3">
-            <input
-                id="marketing_opt_in"
-                name="marketing_opt_in"
-                type="checkbox"
-                value="1"
-                class="h-4 w-4 rounded border-purple-200 text-purple-600 focus:ring-purple-600"
-                @checked(old('marketing_opt_in', $user->marketing_opt_in))
-            >
-            <div>
-                <label for="marketing_opt_in" class="block text-sm font-medium text-[#1f2937] cursor-pointer">{{ __('Receive security insights & device tips') }}</label>
-                <p class="text-sm text-[#6b7280]">
-                    {{ __('Opt in to receive periodic recommendations tailored to your SafeNest setup.') }}
-                </p>
+        <div class="mb-4">
+            <div class="form-check">
+                <input
+                    id="marketing_opt_in"
+                    name="marketing_opt_in"
+                    type="checkbox"
+                    value="1"
+                    class="form-check-input"
+                    @checked(old('marketing_opt_in', $user->marketing_opt_in))
+                >
+                <label for="marketing_opt_in" class="form-check-label">{{ __('Receive security insights & device tips') }}</label>
             </div>
+            <p class="small text-secondary ms-4 mb-0">
+                {{ __('Opt in to receive periodic recommendations tailored to your SafeNest setup.') }}
+            </p>
         </div>
 
-        <div class="flex items-center gap-4">
-            <button type="submit" class="rounded-full bg-purple-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-purple-700 transition">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <button type="submit" class="btn btn-primary rounded-pill px-4">
                 {{ __('Save') }}
             </button>
 
@@ -104,7 +104,7 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-[#16a34a]"
+                    class="small text-success mb-0"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>

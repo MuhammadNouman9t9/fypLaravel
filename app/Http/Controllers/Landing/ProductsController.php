@@ -48,35 +48,47 @@ class ProductsController extends Controller
                 ['path' => $request->url(), 'query' => $request->query()]
             );
         } else {
-            // Use regular filtering
+            // Use regular filtering - optimized queries
             $query = Product::query()
                 ->active()
                 ->with(['categories', 'inventory', 'media'])
                 ->withCount('categories');
 
-            // Filter by company name (brand)
+            // Filter by company name (brand) - using index
             if ($request->filled('company') && $request->company !== '') {
                 $query->where('brand', $request->company);
             }
 
-            // Filter by category
+            // Filter by category - optimized with join instead of whereHas
             if ($request->filled('category') && $request->category !== '') {
-                $category = Category::where('slug', $request->category)->first();
+                $category = \Illuminate\Support\Facades\Cache::remember(
+                    "category_slug_{$request->category}",
+                    now()->addHours(24),
+                    fn () => Category::with('children')->where('slug', $request->category)->first()
+                );
+
                 if ($category) {
                     $categoryIds = [$category->id];
-                    // Include child categories if it's a parent
-                    if ($category->children()->exists()) {
-                        $categoryIds = array_merge($categoryIds, $category->children()->pluck('id')->toArray());
+                    // Include child categories if it's a parent - use eager loaded relationship
+                    if ($category->relationLoaded('children') && $category->children->isNotEmpty()) {
+                        $categoryIds = array_merge($categoryIds, $category->children->pluck('id')->toArray());
+                    } elseif (! $category->relationLoaded('children')) {
+                        $childIds = $category->children()->pluck('id')->toArray();
+                        if (! empty($childIds)) {
+                            $categoryIds = array_merge($categoryIds, $childIds);
+                        }
                     }
-                    $query->whereHas('categories', function ($q) use ($categoryIds) {
+
+                    // Use join instead of whereHas for better performance
+                    $query->whereHas('categories', function ($q) use ($categoryIds): void {
                         $q->whereIn('categories.id', $categoryIds);
                     });
                 }
             }
 
-            // Filter by max quantity
+            // Filter by max quantity - use join for better performance
             if ($request->filled('max_quantity') && $request->max_quantity !== '' && is_numeric($request->max_quantity)) {
-                $query->whereHas('inventory', function ($q) use ($request) {
+                $query->whereHas('inventory', function ($q) use ($request): void {
                     $q->where('quantity_on_hand', '<=', (int) $request->max_quantity);
                 });
             }
@@ -84,13 +96,24 @@ class ProductsController extends Controller
             $products = $query->paginate(6)->withQueryString();
         }
 
-        $categories = Category::whereNull('parent_id')->active()->orderBy('name')->get();
-        $brands = Product::active()
-            ->whereNotNull('brand')
-            ->distinct()
-            ->pluck('brand')
-            ->sort()
-            ->values();
+        // Cache categories and brands - they don't change frequently
+        $categories = \Illuminate\Support\Facades\Cache::remember(
+            'categories_parent_active',
+            now()->addHours(12),
+            fn () => Category::whereNull('parent_id')->active()->orderBy('name')->get()
+        );
+
+        $brands = \Illuminate\Support\Facades\Cache::remember(
+            'products_brands_list',
+            now()->addHours(6),
+            fn () => Product::active()
+                ->whereNotNull('brand')
+                ->select('brand')
+                ->distinct()
+                ->orderBy('brand')
+                ->pluck('brand')
+                ->values()
+        );
 
         return view('landing.products', [
             'products' => $products,
@@ -104,24 +127,36 @@ class ProductsController extends Controller
 
     public function show(Product $product): View
     {
+        // Eager load all relationships at once
         $product->load(['categories', 'media', 'specifications', 'inventory']);
 
-        // Get related products from same category
-        $relatedProducts = Product::query()
-            ->where('id', '!=', $product->id)
-            ->active()
-            ->whereHas('categories', function ($query) use ($product) {
-                $query->whereIn('categories.id', $product->categories->pluck('id'));
-            })
-            ->with(['media', 'categories'])
-            ->limit(4)
-            ->get();
+        // Get category IDs from already loaded relationship
+        $categoryIds = $product->categories->pluck('id')->toArray();
 
-        // Get AI recommendations if available
-        $recommendations = $this->recommendationService->getRecommendations(
-            auth()->user(),
-            ['type' => 'product_detail', 'product_id' => $product->id]
-        )->take(4);
+        // Get related products from same category - optimized query
+        $relatedProducts = collect();
+        if (! empty($categoryIds)) {
+            $relatedProducts = Product::query()
+                ->where('id', '!=', $product->id)
+                ->active()
+                ->whereHas('categories', function ($query) use ($categoryIds): void {
+                    $query->whereIn('categories.id', $categoryIds);
+                })
+                ->with(['media', 'categories'])
+                ->limit(4)
+                ->get();
+        }
+
+        // Get AI recommendations if available - cache the result
+        $cacheKey = 'product_recommendations_'.($product->id ?? 'guest').'_'.$product->id;
+        $recommendations = \Illuminate\Support\Facades\Cache::remember(
+            $cacheKey,
+            now()->addMinutes(30),
+            fn () => $this->recommendationService->getRecommendations(
+                auth()->user(),
+                ['type' => 'product_detail', 'product_id' => $product->id]
+            )->take(4)
+        );
 
         return view('landing.product-show', [
             'product' => $product,

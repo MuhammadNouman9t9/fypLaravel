@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -27,43 +23,31 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(RegisterRequest $request): RedirectResponse
     {
-        // Prepend +92 to phone number for validation
-        $phone = '+92'.preg_replace('/^\+92/', '', $request->phone);
+        $validated = $request->validated();
 
-        $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone' => ['required', 'string', 'max:32', 'regex:/^[0-9]+$/'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+
+        User::create([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'] ?? null,
+            'avatar_path' => $avatarPath,
+            'cnic' => $validated['cnic'],
+            'preferred_language' => $validated['preferred_language'] ?? null,
+            'timezone' => $validated['timezone'] ?? null,
+            'study_program' => $validated['study_program'],
+            'about_me' => $validated['about_me'],
+            'password' => $validated['password'],
         ]);
-
-        // Validate unique phone with +92 prefix
-        if (User::where('phone', $phone)->exists()) {
-            return back()->withErrors(['phone' => 'The phone number has already been taken.'])->withInput();
-        }
-
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $phone,
-            'password' => Hash::make($request->password),
-        ]);
-
-        event(new Registered($user));
-
-        Auth::login($user);
 
         // Store registered email in session for login page suggestion
-        $request->session()->put('registered_email', $request->email);
+        $request->session()->put('registered_email', $validated['email']);
 
-        // Automatically send OTP via email
-        $user->sendOtp('email');
-
-        // Redirect directly to OTP verification page
-        return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
+        return redirect()
+            ->route('login')
+            ->with('status', 'registered');
     }
 }

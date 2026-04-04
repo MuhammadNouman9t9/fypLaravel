@@ -7,65 +7,53 @@
 
     <title>{{ config('app.name', 'SafeNest') }} - Owner</title>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <x-layout-assets />
 </head>
-<body class="min-h-screen bg-gray-50">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="w-64 bg-blue-900 text-white flex-shrink-0 min-h-screen">
-            <div class="flex flex-col h-full">
-                <div class="p-6 border-b border-blue-800">
-                    <h1 class="text-xl font-bold">{{ config('app.name', 'SafeNest') }}</h1>
-                    <p class="text-sm text-blue-300">Owner Panel</p>
-                </div>
+<body class="bg-light">
+    <div class="d-flex min-vh-100">
+        <aside class="bg-primary text-white d-flex flex-column" style="width: 16rem; min-height: 100vh;">
+            <div class="border-bottom border-white border-opacity-25 p-4">
+                <h1 class="h5 fw-bold mb-0">{{ config('app.name', 'SafeNest') }}</h1>
+                <p class="small text-white-50 mb-0">Owner Panel</p>
+            </div>
 
-                <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-                    <a href="{{ route('owner.dashboard') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('owner.dashboard') ? 'bg-blue-700' : 'hover:bg-blue-800' }} transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                        Dashboard
-                    </a>
-                </nav>
+            <nav class="flex-grow-1 p-3 overflow-auto">
+                <a href="{{ route('owner.dashboard') }}" class="d-flex align-items-center gap-2 text-white text-decoration-none rounded px-3 py-2 mb-1 {{ request()->routeIs('owner.dashboard') ? 'bg-white bg-opacity-25' : '' }}">
+                    <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    Dashboard
+                </a>
+            </nav>
 
-                <div class="p-4 border-t border-blue-800">
-                    <form method="POST" action="{{ route('owner.logout') }}">
-                        @csrf
-                        <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-blue-800 transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                            Logout
-                        </button>
-                    </form>
-                </div>
+            <div class="border-top border-white border-opacity-25 p-3">
+                <form method="POST" action="{{ route('owner.logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-link text-white text-decoration-none w-100 text-start p-2 d-flex align-items-center gap-2">
+                        <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                        Logout
+                    </button>
+                </form>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
-            <!-- Header -->
-            <header class="bg-white border-b border-gray-200 px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-2xl font-semibold text-gray-900">@yield('title', 'Dashboard')</h2>
-                    <div class="flex items-center gap-4">
-                        <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
-                        <a href="{{ route('landing.home') }}" class="text-sm text-blue-600 hover:text-blue-700">View Site</a>
+        <div class="flex-grow-1 d-flex flex-column">
+            <header class="bg-white border-bottom px-4 py-3">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <h2 class="h4 mb-0">@yield('title', 'Dashboard')</h2>
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="small text-secondary">{{ auth()->user()->name }}</span>
+                        <a href="{{ route('landing.home') }}" class="small link-primary">View Site</a>
                     </div>
                 </div>
             </header>
 
-            <!-- Content -->
-            <main class="flex-1 p-6">
+            <main class="flex-grow-1 p-4">
                 @if (session('status'))
-                    <div class="mb-4 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-800">
-                        {{ session('status') }}
-                    </div>
+                    <div class="alert alert-success">{{ session('status') }}</div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-800">
-                        <ul class="list-disc list-inside">
+                    <div class="alert alert-danger">
+                        <ul class="mb-0 ps-3">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -81,4 +69,3 @@
     </div>
 </body>
 </html>
-

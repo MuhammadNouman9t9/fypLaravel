@@ -14,12 +14,16 @@ class ProductController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Product::with('categories');
+        // Eager load all necessary relationships to avoid N+1 queries
+        $query = Product::with(['categories', 'media', 'inventory']);
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%')
-                ->orWhere('brand', 'like', '%'.$request->search.'%')
-                ->orWhere('sku', 'like', '%'.$request->search.'%');
+            $searchTerm = $request->search;
+            $query->where(function ($q) use ($searchTerm): void {
+                $q->where('name', 'like', "%{$searchTerm}%")
+                    ->orWhere('brand', 'like', "%{$searchTerm}%")
+                    ->orWhere('sku', 'like', "%{$searchTerm}%");
+            });
         }
 
         if ($request->filled('status')) {

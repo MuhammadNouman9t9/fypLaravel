@@ -13,8 +13,11 @@ class OwnerLoginController extends Controller
     public function showLoginForm(): View|RedirectResponse
     {
         // If already logged in as owner, redirect to owner dashboard
-        if (Auth::check() && Auth::user()->isOwner()) {
-            return redirect()->route('owner.dashboard');
+        if (Auth::check()) {
+            $user = Auth::user()->load('roles');
+            if ($user->isOwner()) {
+                return redirect()->route('owner.dashboard');
+            }
         }
 
         return view('owner.auth.login');
@@ -28,10 +31,10 @@ class OwnerLoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
-            $user = Auth::user();
+            // Eager load roles to avoid N+1 queries
+            $user = Auth::user()->load('roles');
 
             // Check if user is owner
-            $user->refresh();
             if (! $user->isOwner()) {
                 Auth::logout();
                 $request->session()->invalidate();

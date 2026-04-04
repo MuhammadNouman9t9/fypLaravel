@@ -1,7 +1,1 @@
-import './bootstrap';
-
-import Alpine from 'alpinejs';
-
-window.Alpine = Alpine;
-
-Alpine.start();
+// Frontend assets are loaded from CDNs in resources/views/components/layout-assets.blade.php

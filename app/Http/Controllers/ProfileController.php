@@ -45,26 +45,15 @@ class ProfileController extends Controller
         $data['marketing_opt_in'] = $request->boolean('marketing_opt_in');
 
         $user = $request->user();
-        $originalEmail = $user->email;
 
         $user->fill($data);
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
+        // Reset phone verification if phone changed (OTP will be required)
         if ($user->isDirty('phone')) {
             $user->phone_verified_at = null;
         }
 
         $user->save();
-
-        if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail
-            && $user->wasChanged('email')
-            && ! $user->hasVerifiedEmail()
-        ) {
-            $user->sendEmailVerificationNotification();
-        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

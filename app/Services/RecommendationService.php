@@ -117,23 +117,40 @@ class RecommendationService
             return collect();
         }
 
-        // Get user's past orders
-        $userOrders = $user->orders()
-            ->where('payment_status', 'paid')
-            ->with('items.product')
-            ->get();
+        // Cache user's purchase history to avoid repeated queries
+        $cacheKey = "user_purchases_{$user->id}";
+        $purchasedProductIds = \Illuminate\Support\Facades\Cache::remember(
+            $cacheKey,
+            now()->addHours(6),
+            function () use ($user): array {
+                // Get user's past orders - optimized query
+                $userOrders = $user->orders()
+                    ->where('payment_status', 'paid')
+                    ->with('items.product')
+                    ->get();
 
-        if ($userOrders->isEmpty()) {
+                if ($userOrders->isEmpty()) {
+                    return [];
+                }
+
+                // Get products user has purchased
+                return $userOrders->flatMap(function ($order) {
+                    return $order->items->pluck('product_id');
+                })->unique()->toArray();
+            }
+        );
+
+        if (empty($purchasedProductIds)) {
             return collect();
         }
 
-        // Get products user has purchased
-        $purchasedProductIds = $userOrders->flatMap(function ($order) {
-            return $order->items->pluck('product_id');
-        })->unique()->toArray();
-
-        // Find users with similar purchase patterns
-        $similarUsers = $this->findSimilarUsers($user, $purchasedProductIds);
+        // Find users with similar purchase patterns - cache this expensive operation
+        $similarUsersCacheKey = "similar_users_{$user->id}_".md5(implode(',', $purchasedProductIds));
+        $similarUsers = \Illuminate\Support\Facades\Cache::remember(
+            $similarUsersCacheKey,
+            now()->addHours(12),
+            fn () => $this->findSimilarUsers($user, $purchasedProductIds)
+        );
 
         // Get products those users bought but current user hasn't
         $recommendedProductIds = $this->getProductsFromSimilarUsers($similarUsers, $purchasedProductIds);
@@ -246,11 +263,16 @@ class RecommendationService
     protected function findSimilarUsers(User $user, array $purchasedProductIds): Collection
     {
         // Find users who purchased at least 2 of the same products
+        // Optimized: Use join instead of whereHas for better performance
         return User::query()
-            ->where('id', '!=', $user->id)
-            ->whereHas('orders.items', function ($query) use ($purchasedProductIds) {
-                $query->whereIn('product_id', $purchasedProductIds);
-            }, '>=', 2)
+            ->where('users.id', '!=', $user->id)
+            ->join('orders', 'users.id', '=', 'orders.user_id')
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->where('orders.payment_status', 'paid')
+            ->whereIn('order_items.product_id', $purchasedProductIds)
+            ->select('users.*')
+            ->groupBy('users.id')
+            ->havingRaw('COUNT(DISTINCT order_items.product_id) >= 2')
             ->limit(10)
             ->get();
     }

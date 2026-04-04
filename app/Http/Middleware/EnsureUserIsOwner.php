@@ -22,8 +22,10 @@ class EnsureUserIsOwner
             return redirect()->route('owner.login');
         }
 
-        // Refresh the user to ensure roles are loaded
-        $user->refresh();
+        // Eager load roles instead of refresh to avoid unnecessary queries
+        if (! $user->relationLoaded('roles')) {
+            $user->load('roles');
+        }
 
         if (! $user->isOwner()) {
             Auth::logout();

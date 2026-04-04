@@ -28,7 +28,7 @@ class AdminSeeder extends Seeder
                 'first_name' => 'Admin',
                 'last_name' => 'User',
                 'phone' => '+1234567890',
-                'password' => Hash::make('password'),
+                'password' => Hash::make('Admin@123'),
                 'email_verified_at' => now(),
             ]
         );
@@ -43,6 +43,7 @@ class AdminSeeder extends Seeder
 
         $this->command->info('Admin user created:');
         $this->command->info('Email: admin@safenest.com');
-        $this->command->info('Password: password');
+        $this->command->info('Username: Admin');
+        $this->command->info('Password: Admin@123');
     }
 }

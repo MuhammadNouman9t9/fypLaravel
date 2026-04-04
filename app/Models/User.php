@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -10,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -29,6 +28,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'preferred_language',
         'timezone',
         'avatar_path',
+        'cnic',
+        'study_program',
+        'about_me',
         'marketing_opt_in',
         'two_factor_secret',
         'two_factor_recovery_codes',
@@ -90,10 +92,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendOtp(string $channel = 'phone'): string
     {
         $otp = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $otpPhone = $this->phone ?: 'email-user-'.$this->id;
 
         $this->otps()->create([
             'otp' => $otp,
-            'phone' => $this->phone,
+            'phone' => $otpPhone,
             'expires_at' => now()->addMinutes(10),
         ]);
 
@@ -124,7 +127,7 @@ class User extends Authenticatable implements MustVerifyEmail
             return $this->roles->contains('name', $roleName);
         }
 
-        // Otherwise query the database
+        // Use select to only get the name column for better performance
         return $this->roles()->where('name', $roleName)->exists();
     }
 

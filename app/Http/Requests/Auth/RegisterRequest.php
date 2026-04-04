@@ -5,7 +5,6 @@ namespace App\Http\Requests\Auth;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 
 class RegisterRequest extends FormRequest
 {
@@ -30,14 +29,12 @@ class RegisterRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:50',
-                'regex:/^[a-zA-Z\s]+$/',
             ],
             'last_name' => [
                 'required',
                 'string',
                 'min:2',
                 'max:50',
-                'regex:/^[a-zA-Z\s]+$/',
             ],
             'email' => [
                 'required',
@@ -48,16 +45,53 @@ class RegisterRequest extends FormRequest
                 Rule::unique(User::class),
             ],
             'phone' => [
+                'nullable',
+                'string',
+                'max:32',
+                'regex:/^\+92[0-9]{10}$/',
+                Rule::unique(User::class),
+            ],
+            'avatar' => [
+                'required',
+                'file',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
+            'cnic' => [
                 'required',
                 'string',
-                'min:10',
-                'max:10',
-                'regex:/^[0-9]{10}$/',
+                'size:13',
+                'regex:/^[0-9]{13}$/',
+                Rule::unique(User::class),
+            ],
+            'preferred_language' => [
+                'nullable',
+                'string',
+                'max:8',
+                Rule::in(['en', 'ur']),
+            ],
+            'timezone' => [
+                'nullable',
+                'string',
+                'max:64',
+            ],
+            'study_program' => [
+                'required',
+                'string',
+                Rule::in(['BSCS', 'BSSE', 'BSIT', 'BBA', 'OTHER']),
+            ],
+            'about_me' => [
+                'required',
+                'string',
+                'max:2000',
             ],
             'password' => [
                 'required',
-                'confirmed',
-                Rules\Password::defaults(),
+                'string',
+                'min:8',
+                'max:255',
+                // At least 1 uppercase letter and 1 special character
+                'regex:/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).+$/',
             ],
         ];
     }
@@ -73,20 +107,29 @@ class RegisterRequest extends FormRequest
             'first_name.required' => 'First name is required.',
             'first_name.min' => 'First name must be at least 2 characters.',
             'first_name.max' => 'First name cannot exceed 50 characters.',
-            'first_name.regex' => 'First name can only contain letters and spaces.',
             'last_name.required' => 'Last name is required.',
             'last_name.min' => 'Last name must be at least 2 characters.',
             'last_name.max' => 'Last name cannot exceed 50 characters.',
-            'last_name.regex' => 'Last name can only contain letters and spaces.',
             'email.required' => 'Email address is required.',
             'email.email' => 'Please enter a valid email address.',
             'email.unique' => 'This email address is already registered.',
-            'phone.required' => 'Phone number is required.',
-            'phone.min' => 'Phone number must be exactly 10 digits.',
-            'phone.max' => 'Phone number must be exactly 10 digits.',
-            'phone.regex' => 'Phone number must contain exactly 10 digits (e.g., 3001234567).',
+            'phone.regex' => 'Phone must be in format +92XXXXXXXXXX.',
+            'phone.unique' => 'This phone number is already registered.',
+            'avatar.required' => 'Display picture is required.',
+            'avatar.mimes' => 'Display picture must be a JPG or PNG.',
+            'avatar.max' => 'Display picture cannot be larger than 2MB.',
+            'cnic.required' => 'CNIC is required.',
+            'cnic.size' => 'CNIC must be exactly 13 digits.',
+            'cnic.regex' => 'CNIC must contain only digits.',
+            'cnic.unique' => 'This CNIC is already registered.',
+            'preferred_language.in' => 'Please select a valid language.',
+            'study_program.required' => 'Study program is required.',
+            'study_program.in' => 'Please select a valid study program.',
+            'about_me.required' => 'About Me is required.',
+            'about_me.max' => 'About Me cannot exceed 2000 characters.',
             'password.required' => 'Password is required.',
-            'password.confirmed' => 'Password confirmation does not match.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.regex' => 'Password must include at least 1 uppercase letter and 1 special character.',
         ];
     }
 
@@ -95,32 +138,22 @@ class RegisterRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Remove any non-numeric characters from phone
+        if ($this->has('cnic')) {
+            $this->merge([
+                'cnic' => preg_replace('/[^0-9]/', '', (string) $this->cnic),
+            ]);
+        }
+
         if ($this->has('phone')) {
             $this->merge([
-                'phone' => preg_replace('/[^0-9]/', '', $this->phone),
+                'phone' => trim((string) $this->phone) ?: null,
             ]);
         }
 
-        // Trim whitespace from names
-        if ($this->has('first_name')) {
+        if ($this->has('timezone')) {
             $this->merge([
-                'first_name' => trim($this->first_name),
-            ]);
-        }
-
-        if ($this->has('last_name')) {
-            $this->merge([
-                'last_name' => trim($this->last_name),
+                'timezone' => trim((string) $this->timezone) ?: null,
             ]);
         }
     }
 }
-
-
-
-
-
-
-
-

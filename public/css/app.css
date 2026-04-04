@@ -1,0 +1,32 @@
+/* SafeNest — Bootstrap theme + small helpers (no Tailwind) */
+:root {
+    --bs-primary: #6f42c1;
+    --bs-primary-rgb: 111, 66, 193;
+}
+
+.bg-gradient-purple {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+}
+
+.text-purple-soft {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.aspect-product {
+    aspect-ratio: 4 / 3;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.hover-shadow:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+}

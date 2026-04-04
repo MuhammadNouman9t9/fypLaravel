@@ -16,15 +16,25 @@ class AnalyticsService
         $startDate = $startDate ?? now()->subDays(30);
         $endDate = $endDate ?? now();
 
-        $orders = Order::query()
+        // Use aggregate queries instead of loading all records into memory
+        $totalRevenue = Order::query()
             ->whereBetween('created_at', [$startDate, $endDate])
             ->where('payment_status', 'paid')
-            ->get();
+            ->sum('grand_total');
 
-        $totalRevenue = $orders->sum('grand_total');
-        $totalOrders = $orders->count();
+        $totalOrders = Order::query()
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('payment_status', 'paid')
+            ->count();
+
         $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
-        $totalCustomers = $orders->pluck('user_id')->unique()->count();
+
+        // Use distinct count instead of loading all and counting
+        $totalCustomers = Order::query()
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('payment_status', 'paid')
+            ->distinct('user_id')
+            ->count('user_id');
 
         return [
             'total_revenue' => round($totalRevenue, 2),

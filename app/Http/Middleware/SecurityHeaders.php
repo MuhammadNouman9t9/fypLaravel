@@ -37,12 +37,11 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         }
 
-        // Content-Security-Policy: Prevent XSS attacks
-        // Disable CSP in development to avoid blocking Vite and CDN resources
+        // Content-Security-Policy: Disable in local so Blade CDN assets are not blocked while tuning CSP
         if (config('app.env') !== 'local' && config('app.env') !== 'development') {
             // Production: Strict CSP
             $csp = "default-src 'self'; ".
-                   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://fonts.bunny.net; ".
+                   "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://fonts.bunny.net https://cdn.jsdelivr.net; ".
                    "style-src 'self' 'unsafe-inline' https://fonts.bunny.net https://cdn.jsdelivr.net; ".
                    "font-src 'self' https://fonts.bunny.net data:; ".
                    "img-src 'self' data: https:; ".

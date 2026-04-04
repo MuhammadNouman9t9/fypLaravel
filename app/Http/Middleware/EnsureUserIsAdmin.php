@@ -22,8 +22,10 @@ class EnsureUserIsAdmin
             return redirect()->route('admin.login');
         }
 
-        // Refresh the user to ensure roles are loaded
-        $user->refresh();
+        // Eager load roles instead of refresh to avoid unnecessary queries
+        if (! $user->relationLoaded('roles')) {
+            $user->load('roles');
+        }
 
         if (! $user->isAdmin()) {
             Auth::logout();

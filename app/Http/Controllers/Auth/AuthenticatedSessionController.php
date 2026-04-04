@@ -16,14 +16,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View|RedirectResponse
     {
-        // If already logged in as admin, redirect to admin dashboard
-        if (Auth::check() && Auth::user()->isAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
+        // If already logged in, check roles with eager loading
+        if (Auth::check()) {
+            $user = Auth::user()->load('roles');
 
-        // If already logged in as owner, redirect to owner dashboard
-        if (Auth::check() && Auth::user()->isOwner()) {
-            return redirect()->route('owner.dashboard');
+            if ($user->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            }
+
+            if ($user->isOwner()) {
+                return redirect()->route('owner.dashboard');
+            }
         }
 
         return view('auth.login');
@@ -41,8 +44,8 @@ class AuthenticatedSessionController extends Controller
         // Clear registered email from session after successful login
         $request->session()->forget('registered_email');
 
-        $user = Auth::user();
-        $user->refresh();
+        // Eager load roles to avoid N+1 queries
+        $user = Auth::user()->load('roles');
 
         // If user is admin, logout and redirect to admin login
         if ($user->isAdmin()) {
