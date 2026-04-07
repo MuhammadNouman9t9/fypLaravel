@@ -3,12 +3,9 @@
 @section('title', 'Analytics')
 
 @section('content')
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
-        <div>
-            <h1 class="h4 mb-0">Analytics</h1>
-            <p class="small text-muted mb-0">Sales and conversion metrics for the selected range.</p>
-        </div>
-        <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm">&larr; Dashboard</a>
+    <div class="mb-4">
+        <h1 class="h4 mb-1">Analytics</h1>
+        <p class="small text-muted mb-0">Sales and conversion metrics for the selected range.</p>
     </div>
 
     <div class="card border-0 shadow-sm mb-4">

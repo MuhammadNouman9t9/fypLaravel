@@ -29,8 +29,15 @@
         <div class="d-flex flex-column min-vh-100">
             <header class="border-bottom bg-white">
                 <div class="container-fluid py-3 px-4">
-                    <h2 class="h5 mb-0 fw-semibold text-truncate">@yield('title', 'Control panel')</h2>
-                    <p class="small text-secondary mb-0">Administration</p>
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                        <div class="min-w-0">
+                            <h2 class="h5 mb-0 fw-semibold text-truncate">@yield('title', 'Control panel')</h2>
+                            <p class="small text-secondary mb-0">Administration</p>
+                        </div>
+                        @if (! request()->routeIs('admin.dashboard'))
+                            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm flex-shrink-0">&larr; {{ __('Dashboard') }}</a>
+                        @endif
+                    </div>
                 </div>
             </header>
 
