@@ -99,10 +99,6 @@
                                                 {{ __('Remove') }}
                                             </button>
                                         </form>
-                                        <a href="{{ route('support.index') }}" class="inline-flex items-center gap-2 rounded-full border border-purple-600 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-purple-600 hover:bg-purple-600 hover:text-white">
-                                            {{ __('Talk to an expert') }}
-                                            <span aria-hidden="true">→</span>
-                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -149,15 +145,6 @@
                                 </a>
                             @endauth
                         </div>
-                    </div>
-                    <div class="rounded-3xl border border-[#e5e7eb] bg-[#f9fafb] p-6 shadow-sm">
-                        <h3 class="text-sm font-semibold uppercase tracking-wide text-[#2563eb]">{{ __('Need assistance?') }}</h3>
-                        <p class="mt-2 text-sm leading-relaxed text-[#475569]">
-                            {{ __('Certified SafeNest experts can help you finalize placement, automation routines, and privacy preferences before installation day.') }}
-                        </p>
-                        <a href="{{ route('support.index') }}" class="mt-4 inline-flex items-center justify-center rounded-full border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
-                            {{ __('Schedule a consultation') }}
-                        </a>
                     </div>
                 </aside>
             </div>

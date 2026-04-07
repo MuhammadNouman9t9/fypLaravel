@@ -11,8 +11,6 @@ Route::get('/about', fn () => redirect()->route('landing.home'))->name('landing.
 Route::get('/products', \App\Http\Controllers\Landing\ProductsController::class)->name('landing.products');
 Route::get('/products/{product:slug}', [\App\Http\Controllers\Landing\ProductsController::class, 'show'])->name('landing.product.show');
 
-Route::view('/projects', 'pages.projects')->name('pages.projects');
-
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::patch('/cart/{product:slug}', [CartController::class, 'update'])->name('cart.update');
@@ -22,15 +20,6 @@ Route::post('/cart/checkout', [CartController::class, 'checkout'])->name('cart.c
 Route::get('/dashboard', fn () => redirect()->route('landing.home'))
     ->middleware(['auth', \App\Http\Middleware\EnsureTwoFactorVerified::class])
     ->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::post('/support/experts', [\App\Http\Controllers\Support\ExpertConsultationController::class, 'store'])->name('support.experts.store');
-
-    // User Support Routes
-    Route::get('/support', [\App\Http\Controllers\Support\SupportController::class, 'index'])->name('support.index');
-    Route::get('/support/{conversation}', [\App\Http\Controllers\Support\SupportController::class, 'show'])->name('support.show');
-    Route::post('/support/{conversation}/respond', [\App\Http\Controllers\Support\SupportController::class, 'respond'])->name('support.respond');
-});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

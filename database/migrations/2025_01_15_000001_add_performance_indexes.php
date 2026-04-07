@@ -11,38 +11,42 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('products', function (Blueprint $table): void {
-            // Index for brand filtering
-            $table->index('brand');
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table): void {
+                // Index for brand filtering
+                $table->index('brand');
 
-            // Index for price filtering
-            $table->index('price');
+                // Index for price filtering
+                $table->index('price');
 
-            // Composite index for active products with price
-            $table->index(['is_active', 'price']);
-        });
+                // Composite index for active products with price
+                $table->index(['is_active', 'price']);
+            });
+        }
 
-        Schema::table('orders', function (Blueprint $table): void {
-            // Index for user orders (if not already exists from foreign key)
-            if (! $this->hasIndex('orders', 'orders_user_id_index')) {
-                $table->index('user_id', 'orders_user_id_index');
-            }
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table): void {
+                // Index for user orders (if not already exists from foreign key)
+                if (! $this->hasIndex('orders', 'orders_user_id_index')) {
+                    $table->index('user_id', 'orders_user_id_index');
+                }
 
-            // Index for payment status
-            $table->index('payment_status');
+                // Index for payment status
+                $table->index('payment_status');
 
-            // Composite index for user orders with payment status
-            $table->index(['user_id', 'payment_status', 'created_at']);
-        });
+                // Composite index for user orders with payment status
+                $table->index(['user_id', 'payment_status', 'created_at']);
+            });
+        }
 
-        Schema::table('categories', function (Blueprint $table): void {
-            // Index for slug lookups (slug is already unique, but add index for faster lookups)
-            // Note: unique() already creates an index, but we'll add composite if needed
-            // Index for parent_id (if not already exists from foreign key)
-            if (! $this->hasIndex('categories', 'categories_parent_id_index')) {
-                $table->index('parent_id', 'categories_parent_id_index');
-            }
-        });
+        if (Schema::hasTable('categories')) {
+            Schema::table('categories', function (Blueprint $table): void {
+                // Index for parent_id (if not already exists from foreign key)
+                if (! $this->hasIndex('categories', 'categories_parent_id_index')) {
+                    $table->index('parent_id', 'categories_parent_id_index');
+                }
+            });
+        }
 
         // order_items.product_id already has index from foreign key constraint
     }
@@ -52,25 +56,31 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('products', function (Blueprint $table): void {
-            $table->dropIndex(['brand']);
-            $table->dropIndex(['price']);
-            $table->dropIndex(['is_active', 'price']);
-        });
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table): void {
+                $table->dropIndex(['brand']);
+                $table->dropIndex(['price']);
+                $table->dropIndex(['is_active', 'price']);
+            });
+        }
 
-        Schema::table('orders', function (Blueprint $table): void {
-            if ($this->hasIndex('orders', 'orders_user_id_index')) {
-                $table->dropIndex('orders_user_id_index');
-            }
-            $table->dropIndex(['payment_status']);
-            $table->dropIndex(['user_id', 'payment_status', 'created_at']);
-        });
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table): void {
+                if ($this->hasIndex('orders', 'orders_user_id_index')) {
+                    $table->dropIndex('orders_user_id_index');
+                }
+                $table->dropIndex(['payment_status']);
+                $table->dropIndex(['user_id', 'payment_status', 'created_at']);
+            });
+        }
 
-        Schema::table('categories', function (Blueprint $table): void {
-            if ($this->hasIndex('categories', 'categories_parent_id_index')) {
-                $table->dropIndex('categories_parent_id_index');
-            }
-        });
+        if (Schema::hasTable('categories')) {
+            Schema::table('categories', function (Blueprint $table): void {
+                if ($this->hasIndex('categories', 'categories_parent_id_index')) {
+                    $table->dropIndex('categories_parent_id_index');
+                }
+            });
+        }
     }
 
     /**

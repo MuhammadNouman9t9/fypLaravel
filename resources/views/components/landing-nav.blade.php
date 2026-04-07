@@ -17,15 +17,6 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('landing.products') ? 'active' : '' }}" href="{{ route('landing.products') }}">{{ __('Shop') }}</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('pages.projects') ? 'active' : '' }}" href="{{ route('pages.projects') }}">{{ __('Projects') }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/#how-it-works') }}">{{ __('How It Works') }}</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('support.*') ? 'active' : '' }}" href="{{ route('support.index') }}">{{ __('Security Experts') }}</a>
-                </li>
             </ul>
 
             <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2">

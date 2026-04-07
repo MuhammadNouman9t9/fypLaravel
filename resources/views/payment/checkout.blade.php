@@ -128,15 +128,6 @@
                     </dl>
                 </div>
                 
-                <div class="rounded-3xl border border-[#e5e7eb] bg-[#f9fafb] p-6 shadow-sm">
-                    <h3 class="text-sm font-semibold uppercase tracking-wide text-[#2563eb] mb-4">{{ __('Need assistance?') }}</h3>
-                    <p class="text-sm leading-relaxed text-[#475569] mb-4">
-                        {{ __('If you have any questions about your order or payment, our support team is here to help.') }}
-                    </p>
-                    <a href="{{ route('support.index') }}" class="inline-flex items-center justify-center w-full rounded-full border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 hover:bg-purple-600 hover:text-white">
-                        {{ __('Contact Support') }}
-                    </a>
-                </div>
             </aside>
         </div>
     </section>

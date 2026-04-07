@@ -30,3 +30,27 @@
 .hover-shadow:hover {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
 }
+
+.landing-hero-section {
+    min-height: calc(100vh - 120px);
+}
+
+.hero-visual-wrap {
+    max-width: 28rem;
+}
+
+@media (max-width: 991.98px) {
+    .landing-hero-section {
+        min-height: calc(100vh - 96px);
+    }
+
+    .hero-visual-wrap {
+        max-width: 22rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .landing-hero-section {
+        min-height: auto;
+    }
+}
