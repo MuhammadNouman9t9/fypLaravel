@@ -3,93 +3,90 @@
 @section('title', 'Products')
 
 @section('content')
-    <div class="mb-6 flex items-center justify-between">
-        <h2 class="text-2xl font-semibold text-gray-900">Products</h2>
-        <a href="{{ route('admin.products.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0">Products</h2>
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
             Add New Product
         </a>
     </div>
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div class="p-4 border-b border-gray-200">
-            <form method="GET" action="{{ route('admin.products.index') }}" class="flex gap-3 items-center">
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..." class="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                
-                <div class="relative">
-                    <select name="status" class="appearance-none px-4 py-2.5 pr-10 border border-gray-300 rounded-lg bg-white text-gray-900 focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body border-bottom">
+            <form method="GET" action="{{ route('admin.products.index') }}" class="row g-2 align-items-center">
+                <div class="col-12 col-md">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search products..." class="form-control">
+                </div>
+                <div class="col-12 col-md-3">
+                    <select name="status" class="form-select">
                         <option value="">All Status</option>
                         <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ request('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </div>
                 </div>
-                
-                <button type="submit" class="px-4 py-2.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition">Filter</button>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </div>
             </form>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        <th>Product</th>
+                        <th>Brand</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
+                <tbody>
                     @forelse ($products as $product)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center gap-3">
-                                    <div class="h-12 w-12 overflow-hidden rounded-lg bg-gray-100 border border-gray-200">
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width: 48px; height: 48px;" class="overflow-hidden rounded border bg-light d-flex align-items-center justify-content-center">
                                         @if ($product->cover_image_url)
-                                            <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                            <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="w-100 h-100" style="object-fit: cover;">
                                         @else
-                                            <div class="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                                            <div class="text-muted small">
                                                 No image
                                             </div>
                                         @endif
                                     </div>
                                     <div>
-                                        <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
-                                        <div class="text-sm text-gray-500">{{ $product->sku }}</div>
+                                        <div class="fw-semibold">{{ $product->name }}</div>
+                                        <div class="text-muted small">{{ $product->sku }}</div>
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $product->brand }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${{ number_format($product->price, 2) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $product->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                            <td>{{ $product->brand }}</td>
+                            <td>${{ number_format($product->price, 2) }}</td>
+                            <td>
+                                <span class="badge {{ $product->is_active ? 'text-bg-success' : 'text-bg-danger' }}">
                                     {{ $product->is_active ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <a href="{{ route('admin.products.show', $product) }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                                <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure?')">
+                            <td class="d-flex flex-wrap gap-2">
+                                <a href="{{ route('admin.products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">No products found.</td>
+                            <td colspan="5" class="text-center text-muted py-4">No products found.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
 
-        <div class="px-6 py-4 border-t border-gray-200">
+        <div class="card-body border-top">
             {{ $products->links() }}
         </div>
     </div>

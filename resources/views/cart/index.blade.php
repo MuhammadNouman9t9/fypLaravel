@@ -1,24 +1,26 @@
 <x-landing-layout title="Cart">
-    <section class="mx-auto max-w-6xl px-4 py-14 lg:py-16">
+    <section class="container py-5">
         @if (session('status'))
-            <div class="mb-8 rounded-2xl border border-[#bbf7d0] bg-[#dcfce7] px-6 py-4 text-sm font-medium text-[#166534]">
+            <div class="alert alert-success mb-4">
                 {{ session('status') }}
             </div>
         @endif
 
         @if ($items->isEmpty())
-            <div class="rounded-3xl border border-dashed border-[#cbd5f5] bg-[#eef2ff] px-8 py-16 text-center">
-                <h2 class="text-2xl font-semibold text-[#312e81]">{{ __('Your cart is feeling a little empty') }}</h2>
-                <p class="mt-3 text-sm text-[#4338ca]">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5">
+                    <h2 class="h4 mb-2">{{ __('Your cart is feeling a little empty') }}</h2>
+                    <p class="text-muted mb-4">
                     {{ __('Explore SafeNest AI bundles and add smart devices that match your property profile.') }}
-                </p>
-                <a href="{{ route('landing.products') }}" class="mt-6 inline-flex items-center justify-center rounded-full bg-white px-6 py-2 text-sm font-semibold text-[#312e81] shadow-sm hover:bg-[#e0e7ff]">
-                    {{ __('Browse devices') }}
-                </a>
+                    </p>
+                    <a href="{{ route('landing.products') }}" class="btn btn-primary">
+                        {{ __('Browse devices') }}
+                    </a>
+                </div>
             </div>
         @else
-            <div class="grid gap-8 lg:grid-cols-[1.4fr,0.6fr]">
-                <div class="space-y-6">
+            <div class="row g-4">
+                <div class="col-12 col-lg-8">
                     @foreach ($items as $item)
                         @php
                             /** @var \App\Models\Product $product */
@@ -26,42 +28,43 @@
                             $availableUnits = $item['available_units'];
                             $inStock = $item['in_stock'];
                         @endphp
-                        <article class="rounded-3xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
-                            <div class="flex flex-col gap-6 sm:flex-row">
-                                <div class="flex-shrink-0 overflow-hidden rounded-2xl border border-[#e5e7eb] bg-[#f9fafb] sm:w-40">
+                        <article class="card border-0 shadow-sm mb-3">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-12 col-sm-4 col-md-3">
                                     @if ($product->cover_image_url)
-                                        <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="h-40 w-full object-cover">
+                                            <img src="{{ $product->cover_image_url }}" alt="{{ $product->name }}" class="img-fluid rounded border w-100" style="height: 140px; object-fit: cover;">
                                     @else
-                                        <div class="flex h-40 items-center justify-center text-xs text-[#94a3b8]">
+                                            <div class="rounded border bg-light d-flex align-items-center justify-content-center text-muted small" style="height: 140px;">
                                             {{ __('Image coming soon') }}
                                         </div>
                                     @endif
                                 </div>
-                                <div class="flex flex-1 flex-col gap-4">
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                                        <div class="space-y-1">
-                                            <span class="text-lg font-semibold text-[#0f172a]">
+                                    <div class="col-12 col-sm-8 col-md-9">
+                                        <div class="d-flex flex-wrap justify-content-between gap-2">
+                                            <div>
+                                                <div class="fw-semibold fs-5">
                                                 {{ $product->name }}
-                                            </span>
-                                            <p class="text-sm text-[#475569]">{{ $product->brand }}</p>
-                                            <p class="text-xs uppercase tracking-wide text-[#6366f1]">
+                                                </div>
+                                                <div class="text-muted">{{ $product->brand }}</div>
+                                                <div class="small text-primary text-uppercase">
                                                 {{ $product->primary_category_name ?? __('Smart security') }}
-                                            </p>
+                                                </div>
                                         </div>
-                                        <div class="text-right">
-                                            <p class="text-base font-semibold text-purple-600">${{ number_format($product->price, 2) }}</p>
+                                            <div class="text-end">
+                                                <div class="fw-semibold text-primary">${{ number_format($product->price, 2) }}</div>
                                             @if ($product->compare_at_price)
-                                                <p class="text-xs text-[#94a3b8] line-through">${{ number_format($product->compare_at_price, 2) }}</p>
+                                                    <div class="small text-muted text-decoration-line-through">${{ number_format($product->compare_at_price, 2) }}</div>
                                             @endif
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                                        <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                                            <label class="text-xs font-semibold uppercase tracking-wide text-[#64748b]" for="quantity-{{ $product->getKey() }}">
+                                        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mt-3">
+                                            <div>
+                                                <label class="form-label small mb-1" for="quantity-{{ $product->getKey() }}">
                                                 {{ __('Quantity') }}
                                             </label>
-                                            <div class="flex items-center gap-3">
+                                                <div>
                                                 <input
                                                     id="quantity-{{ $product->getKey() }}"
                                                     data-product-id="{{ $product->getKey() }}"
@@ -71,31 +74,32 @@
                                                     min="1"
                                                     max="10"
                                                     value="{{ $item['quantity'] }}"
-                                                    class="quantity-input w-24 rounded-2xl border border-purple-200 bg-white px-3 py-2 text-sm focus:border-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-600/10"
+                                                        class="quantity-input form-control"
+                                                        style="width: 96px;"
                                                 >
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="space-y-1 text-sm text-[#475569]">
+                                            <div class="small text-muted">
                                             <p class="line-total" data-product-id="{{ $product->getKey() }}">
                                                 {{ __('Line total: :amount', ['amount' => '$' . number_format($item['line_total'], 2)]) }}
                                             </p>
                                             @if ($availableUnits !== null)
-                                                <p class="{{ $inStock ? 'text-[#16a34a]' : 'text-[#b91c1c]' }}">
+                                                    <p class="{{ $inStock ? 'text-success' : 'text-danger' }} mb-0">
                                                     {{ $inStock
                                                         ? __('In stock · :count units available', ['count' => $availableUnits])
                                                         : __('Ships when restocked') }}
                                                 </p>
                                             @else
-                                                <p class="text-[#2563eb]">{{ __('Ready to ship within 24 hours') }}</p>
+                                                    <p class="text-primary mb-0">{{ __('Ready to ship within 24 hours') }}</p>
                                             @endif
                                         </div>
                                     </div>
 
-                                    <div class="flex flex-wrap items-center gap-3">
-                                        <form action="{{ route('cart.destroy', $product) }}" method="post" class="inline-flex">
+                                        <div class="mt-3">
+                                            <form action="{{ route('cart.destroy', $product) }}" method="post" class="d-inline">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="rounded-full border border-[#e11d48] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#e11d48] hover:bg-[#fee2e2]">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">
                                                 {{ __('Remove') }}
                                             </button>
                                         </form>
@@ -106,44 +110,39 @@
                     @endforeach
                 </div>
 
-                <aside class="space-y-6">
-                    <div class="rounded-3xl border border-purple-600 bg-white p-6 shadow-sm">
-                        <h2 class="text-lg font-semibold text-[#0f172a]">{{ __('Order summary') }}</h2>
-                        <dl class="mt-4 space-y-3 text-sm text-[#475569]">
-                            <div class="flex items-center justify-between">
+                <aside class="col-12 col-lg-4">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <h2 class="h5 mb-3">{{ __('Order summary') }}</h2>
+                            <dl class="small mb-0">
+                                <div class="d-flex justify-content-between mb-2">
                                 <dt>{{ __('Subtotal') }}</dt>
-                                <dd class="order-subtotal font-semibold text-purple-600">${{ number_format($summary['subtotal'], 2) }}</dd>
+                                    <dd class="order-subtotal fw-semibold text-primary">${{ number_format($summary['subtotal'], 2) }}</dd>
                             </div>
-                            <div class="flex items-center justify-between">
+                                <div class="d-flex justify-content-between mb-2">
                                 <dt>{{ __('Estimated tax') }}</dt>
-                                <dd class="order-tax font-semibold text-purple-600">${{ number_format($summary['tax'], 2) }}</dd>
+                                    <dd class="order-tax fw-semibold text-primary">${{ number_format($summary['tax'], 2) }}</dd>
                             </div>
-                            <div class="flex items-center justify-between border-t border-dashed border-[#e5e7eb] pt-3">
-                                <dt class="font-semibold text-purple-600">{{ __('Total due today') }}</dt>
-                                <dd class="order-total text-xl font-semibold text-[#0f172a]">${{ number_format($summary['total'], 2) }}</dd>
+                                <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                                    <dt class="fw-semibold">{{ __('Total due today') }}</dt>
+                                    <dd class="order-total fs-5 fw-semibold">${{ number_format($summary['total'], 2) }}</dd>
                             </div>
                         </dl>
-                        
-                        <!-- Checkout Button -->
-                        <div class="mt-6">
+
+                            <div class="mt-4">
                             @auth
                                 <form action="{{ route('cart.checkout') }}" method="POST">
                                     @csrf
-                                    <button 
-                                        type="submit" 
-                                        class="w-full rounded-full bg-purple-600 px-4 py-3 text-sm font-semibold text-white hover:bg-purple-700 transition"
-                                    >
+                                        <button type="submit" class="btn btn-primary w-100">
                                         {{ __('Proceed to Payment') }}
                                     </button>
                                 </form>
                             @else
-                                <a 
-                                    href="{{ route('login') }}" 
-                                    class="block w-full rounded-full bg-purple-600 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-purple-700 transition"
-                                >
+                                    <a href="{{ route('login') }}" class="btn btn-primary w-100">
                                     {{ __('Login to Checkout') }}
                                 </a>
                             @endauth
+                            </div>
                         </div>
                     </div>
                 </aside>
@@ -268,41 +267,22 @@
             }
 
             function updateCartCount(count) {
-                // Update desktop cart badge
-                const desktopCartLink = document.querySelector('a[data-cart-link="desktop"]');
-                if (desktopCartLink) {
-                    let badge = desktopCartLink.querySelector('span.rounded-full');
-                    if (!badge && count > 0) {
-                        badge = document.createElement('span');
-                        badge.className = 'absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-[11px] font-semibold text-white';
-                        desktopCartLink.appendChild(badge);
-                    }
-                    if (badge) {
-                        if (count > 0) {
-                            badge.textContent = count;
-                            badge.style.display = '';
-                        } else {
-                            badge.remove();
-                        }
-                    }
+                const cartLink = document.querySelector(`a[href="{{ route('cart.index') }}"]`);
+                if (!cartLink) return;
+
+                let badge = cartLink.querySelector('.badge');
+                if (!badge && count > 0) {
+                    badge = document.createElement('span');
+                    badge.className = 'position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary';
+                    badge.style.fontSize = '0.65rem';
+                    cartLink.appendChild(badge);
                 }
 
-                // Update mobile cart badge
-                const mobileCartLink = document.querySelector('a[data-cart-link="mobile"]');
-                if (mobileCartLink) {
-                    let badge = mobileCartLink.querySelector('span.rounded-full') || mobileCartLink.querySelector('span.ml-auto');
-                    if (!badge && count > 0) {
-                        badge = document.createElement('span');
-                        badge.className = 'ml-auto inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-2 text-[11px] font-semibold text-white';
-                        mobileCartLink.appendChild(badge);
-                    }
-                    if (badge) {
-                        if (count > 0) {
-                            badge.textContent = count;
-                            badge.style.display = '';
-                        } else {
-                            badge.remove();
-                        }
+                if (badge) {
+                    if (count > 0) {
+                        badge.textContent = count;
+                    } else {
+                        badge.remove();
                     }
                 }
             }

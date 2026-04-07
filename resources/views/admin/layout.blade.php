@@ -8,6 +8,21 @@
     <title>{{ config('app.name', 'SafeNest') }} - Admin</title>
 
     <x-layout-assets />
+    <style>
+        /* Tailwind-like icon sizing helpers for admin Blade SVGs */
+        .w-3 { width: .75rem; }
+        .h-3 { height: .75rem; }
+        .w-4 { width: 1rem; }
+        .h-4 { height: 1rem; }
+        .w-5 { width: 1.25rem; }
+        .h-5 { height: 1.25rem; }
+        .w-6 { width: 1.5rem; }
+        .h-6 { height: 1.5rem; }
+        .w-8 { width: 2rem; }
+        .h-8 { height: 2rem; }
+        .mr-1 { margin-right: .25rem; }
+        .mr-2 { margin-right: .5rem; }
+    </style>
 </head>
 <body class="bg-light">
     <div class="min-vh-100 d-flex flex-column">

@@ -12,20 +12,38 @@ use Stripe\StripeClient;
 
 class StripeService
 {
-    private StripeClient $stripe;
+    private ?StripeClient $stripe = null;
+    private ?string $secretKey = null;
 
     public function __construct()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $secret = config('services.stripe.secret');
+        if (is_string($secret) && ! blank($secret)) {
+            $this->secretKey = $secret;
+        }
+    }
 
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
+    private function client(): StripeClient
+    {
+        if ($this->stripe instanceof StripeClient) {
+            return $this->stripe;
+        }
+
+        if (! is_string($this->secretKey) || blank($this->secretKey)) {
+            throw new \RuntimeException('Stripe secret key is not configured.');
+        }
+
+        Stripe::setApiKey($this->secretKey);
+        $this->stripe = new StripeClient($this->secretKey);
+
+        return $this->stripe;
     }
 
     public function createPaymentIntent(Order $order): PaymentIntent
     {
         $amountInCents = (int) ($order->grand_total * 100);
 
-        $paymentIntent = $this->stripe->paymentIntents->create([
+        $paymentIntent = $this->client()->paymentIntents->create([
             'amount' => $amountInCents,
             'currency' => strtolower($order->currency),
             'payment_method_types' => ['card'],
@@ -41,7 +59,7 @@ class StripeService
 
     public function retrievePaymentIntent(string $paymentIntentId): PaymentIntent
     {
-        return $this->stripe->paymentIntents->retrieve($paymentIntentId);
+        return $this->client()->paymentIntents->retrieve($paymentIntentId);
     }
 
     public function handleWebhook(array $payload): void
@@ -171,7 +189,7 @@ class StripeService
                 $refundData['amount'] = (int) ($amount * 100);
             }
 
-            $refund = $this->stripe->refunds->create($refundData);
+            $refund = $this->client()->refunds->create($refundData);
 
             $refundedAmount = ($refund['amount'] ?? 0) / 100;
 

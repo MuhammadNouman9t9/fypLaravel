@@ -37,7 +37,18 @@ class PaymentController extends Controller
                 ->with('status', __('This order has no amount to pay.'));
         }
 
-        $paymentIntent = $this->stripeService->createPaymentIntent($order);
+        try {
+            $paymentIntent = $this->stripeService->createPaymentIntent($order);
+        } catch (\Throwable $e) {
+            Log::error('Unable to initialize Stripe checkout', [
+                'order_id' => $order->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return redirect()
+                ->route('orders.show', $order)
+                ->withErrors(['payment' => __('Stripe is not configured. Please contact support.')]);
+        }
 
         $payment = Payment::create([
             'order_id' => $order->id,
