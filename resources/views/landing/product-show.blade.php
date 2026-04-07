@@ -19,13 +19,26 @@
                         @if ($allImages->count() > 0)
                             <div class="position-relative rounded-4 border shadow overflow-hidden bg-white ratio ratio-1x1">
                                 @if ($allImages->count() > 1)
-                                    <button type="button" @click="previous()" class="btn btn-light position-absolute top-50 start-0 translate-middle-y ms-2 z-3 rounded-circle shadow-sm" aria-label="Previous">
-                                        <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {{-- Explicit left/right so arrows stay on correct sides (start/end utilities can fail with some CSS stacks) --}}
+                                    <button
+                                        type="button"
+                                        @click="previous()"
+                                        class="position-absolute border-0 shadow-sm"
+                                        style="left: 12px; right: auto; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.92); display: inline-flex; align-items: center; justify-content: center; z-index: 5;"
+                                        aria-label="Previous"
+                                    >
+                                        <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                                         </svg>
                                     </button>
-                                    <button type="button" @click="next()" class="btn btn-light position-absolute top-50 end-0 translate-middle-y me-2 z-3 rounded-circle shadow-sm" aria-label="Next">
-                                        <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button
+                                        type="button"
+                                        @click="next()"
+                                        class="position-absolute border-0 shadow-sm"
+                                        style="right: 12px; left: auto; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.92); display: inline-flex; align-items: center; justify-content: center; z-index: 5;"
+                                        aria-label="Next"
+                                    >
+                                        <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                                         </svg>
                                     </button>

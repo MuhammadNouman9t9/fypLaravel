@@ -66,22 +66,6 @@
                 @error('cnic') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
             </div>
 
-            <div class="col-12 col-md-6">
-                <label for="preferred_language" class="form-label fw-semibold">Preferred Language</label>
-                <select id="preferred_language" name="preferred_language" class="form-select">
-                    <option value="" @selected(old('preferred_language') === null || old('preferred_language') === '')>{{ __('Select language') }}</option>
-                    <option value="en" @selected(old('preferred_language') === 'en')>English</option>
-                    <option value="ur" @selected(old('preferred_language') === 'ur')>Urdu</option>
-                </select>
-                @error('preferred_language') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-            </div>
-
-            <div class="col-12 col-md-6">
-                <label for="timezone" class="form-label fw-semibold">Timezone</label>
-                <input id="timezone" type="text" name="timezone" value="{{ old('timezone') }}" placeholder="Asia/Karachi" maxlength="64" autocomplete="off" class="form-control">
-                @error('timezone') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
-            </div>
-
             <div class="col-12">
                 <label for="study_program" class="form-label fw-semibold">Study Program</label>
                 <select id="study_program" name="study_program" required class="form-select">

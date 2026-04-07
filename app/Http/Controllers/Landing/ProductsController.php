@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\RecommendationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class ProductsController extends Controller
@@ -149,14 +151,26 @@ class ProductsController extends Controller
 
         // Get AI recommendations if available - cache the result
         $cacheKey = 'product_recommendations_'.($product->id ?? 'guest').'_'.$product->id;
-        $recommendations = \Illuminate\Support\Facades\Cache::remember(
-            $cacheKey,
-            now()->addMinutes(30),
-            fn () => $this->recommendationService->getRecommendations(
-                auth()->user(),
-                ['type' => 'product_detail', 'product_id' => $product->id]
-            )->take(4)
-        );
+        $recommendations = collect();
+        try {
+            $recommendations = \Illuminate\Support\Facades\Cache::remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                fn () => $this->recommendationService->getRecommendations(
+                    auth()->user(),
+                    ['type' => 'product_detail', 'product_id' => $product->id]
+                )->take(4)
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Product detail recommendations unavailable', [
+                'product_id' => $product->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        if (! $recommendations instanceof Collection) {
+            $recommendations = collect($recommendations)->take(4);
+        }
 
         return view('landing.product-show', [
             'product' => $product,

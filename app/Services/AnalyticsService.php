@@ -226,18 +226,23 @@ class AnalyticsService
 
         $conversionRate = $totalVisitors > 0 ? ($totalOrders / $totalVisitors) * 100 : 0;
 
-        $abandonedCarts = \App\Models\Cart::query()
-            ->where('status', 'draft')
+        // Carts are session-based (no Cart model). Use unpaid orders in range as incomplete checkouts.
+        $unpaidOrders = Order::query()
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->where('grand_total', '>', 0)
+            ->where('payment_status', 'unpaid')
             ->count();
+
+        $checkoutTotal = $totalOrders + $unpaidOrders;
+        $cartAbandonmentRate = $checkoutTotal > 0
+            ? round(($unpaidOrders / $checkoutTotal) * 100, 2)
+            : 0;
 
         return [
             'total_visitors' => $totalVisitors,
             'total_orders' => $totalOrders,
             'conversion_rate' => round($conversionRate, 2),
-            'abandoned_carts' => $abandonedCarts,
-            'cart_abandonment_rate' => $totalOrders > 0 ? round(($abandonedCarts / ($totalOrders + $abandonedCarts)) * 100, 2) : 0,
+            'abandoned_carts' => $unpaidOrders,
+            'cart_abandonment_rate' => $cartAbandonmentRate,
         ];
     }
 }
