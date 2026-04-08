@@ -66,6 +66,20 @@
         </div>
 
         <div class="col-12 col-md-6 col-xl-4">
+            <a href="{{ route('admin.fraud-alerts.index') }}" class="card h-100 text-decoration-none text-dark shadow-sm border hover-shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-danger bg-opacity-10 text-danger p-2">
+                            <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        </span>
+                        <h2 class="h6 fw-semibold mb-0">AI fraud alerts</h2>
+                    </div>
+                    <p class="small text-secondary mb-0">Review suspicious transactions, logins, and attack patterns.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
             <form method="POST" action="{{ route('admin.logout') }}" class="card h-100 border-danger border-opacity-25 shadow-sm">
                 @csrf
                 <button type="submit" class="card-body btn btn-link text-start text-decoration-none text-dark w-100 h-100">
@@ -80,4 +94,5 @@
             </form>
         </div>
     </div>
+
 @endsection

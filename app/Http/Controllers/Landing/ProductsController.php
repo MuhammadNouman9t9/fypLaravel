@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Landing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\FraudAlert;
 use App\Models\Product;
 use App\Services\RecommendationService;
 use Illuminate\Http\Request;
@@ -117,13 +118,47 @@ class ProductsController extends Controller
                 ->values()
         );
 
+        $quickSafetyScore = null;
+        if ($request->boolean('ai_score') && $request->filled('property_type')) {
+            $quickSafetyScore = $this->calculateQuickSafetyScore($request);
+        }
+
+        $fraudInsights = [
+            'enabled' => (bool) config('safenest.ai.fraud_detection.enabled'),
+            'open_alerts' => 0,
+            'high_risk_alerts' => 0,
+            'latest_alert_level' => null,
+        ];
+
+        if (auth()->check()) {
+            $alertsQuery = FraudAlert::query()->where('user_id', auth()->id());
+
+            $fraudInsights['open_alerts'] = (clone $alertsQuery)->where('status', 'open')->count();
+            $fraudInsights['high_risk_alerts'] = (clone $alertsQuery)->whereIn('risk_level', ['high', 'critical'])->count();
+            $fraudInsights['latest_alert_level'] = (clone $alertsQuery)->latest('detected_at')->value('risk_level');
+        }
+
         return view('landing.products', [
             'products' => $products,
             'categories' => $categories,
             'brands' => $brands,
             'filters' => $request->only(['company', 'category', 'max_quantity']),
-            'aiFilters' => $request->only(['property_type', 'property_size', 'budget', 'entry_points', 'exit_points', 'ai_recommend']),
+            'aiFilters' => $request->only([
+                'property_type',
+                'property_size',
+                'budget',
+                'entry_points',
+                'exit_points',
+                'neighborhood_profile',
+                'occupancy_pattern',
+                'has_security_system',
+                'previous_incidents',
+                'ai_recommend',
+                'ai_score',
+            ]),
             'usingAI' => $useAIRecommendation,
+            'quickSafetyScore' => $quickSafetyScore,
+            'fraudInsights' => $fraudInsights,
         ]);
     }
 
@@ -177,5 +212,79 @@ class ProductsController extends Controller
             'relatedProducts' => $relatedProducts,
             'recommendations' => $recommendations,
         ]);
+    }
+
+    protected function calculateQuickSafetyScore(Request $request): array
+    {
+        $propertySize = max(100, (int) $request->integer('property_size', 1000));
+        $entryPoints = max(1, (int) $request->integer('entry_points', 2));
+        $exitPoints = max(1, (int) $request->integer('exit_points', 1));
+        $hasSecuritySystem = $request->boolean('has_security_system');
+        $previousIncidents = $request->boolean('previous_incidents');
+
+        $score = 50;
+
+        $score += match ($request->input('property_type')) {
+            'apartment', 'condo' => 10,
+            'house', 'villa' => 5,
+            'townhouse' => 8,
+            'commercial' => 3,
+            default => 0,
+        };
+
+        $score += match (true) {
+            $propertySize < 500 => 5,
+            $propertySize < 1500 => 0,
+            $propertySize < 3000 => -5,
+            default => -10,
+        };
+
+        $score += match ($request->input('occupancy_pattern')) {
+            'always_occupied' => 15,
+            'mostly_occupied' => 10,
+            'partially_occupied' => 5,
+            'rarely_occupied' => -10,
+            'vacant' => -20,
+            default => 0,
+        };
+
+        $score += match ($request->input('neighborhood_profile')) {
+            'very_safe' => 15,
+            'safe' => 10,
+            'moderate' => 0,
+            'risky' => -15,
+            'high_crime' => -25,
+            default => 0,
+        };
+
+        $totalPoints = $entryPoints + $exitPoints;
+        $score -= match (true) {
+            $totalPoints <= 2 => 0,
+            $totalPoints <= 4 => 5,
+            $totalPoints <= 6 => 10,
+            default => 15,
+        };
+
+        if ($hasSecuritySystem) {
+            $score += 15;
+        }
+
+        if ($previousIncidents) {
+            $score -= 20;
+        }
+
+        $score = max(0, min(100, $score));
+
+        $riskLevel = match (true) {
+            $score >= 80 => 'low',
+            $score >= 60 => 'moderate',
+            $score >= 40 => 'high',
+            default => 'critical',
+        };
+
+        return [
+            'score' => $score,
+            'risk_level' => $riskLevel,
+        ];
     }
 }
