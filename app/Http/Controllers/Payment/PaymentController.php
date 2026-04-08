@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Payment\ProcessPaymentRequest;
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Shipment;
 use App\Services\FraudDetectionService;
 use App\Services\StripeService;
 use Illuminate\Http\JsonResponse;
@@ -93,6 +94,8 @@ class PaymentController extends Controller
                     'payment_status' => 'paid',
                     'paid_at' => now(),
                 ]);
+
+                $this->ensureShipmentForPaidOrder($order);
 
                 // Run fraud detection after successful payment
                 try {
@@ -279,5 +282,21 @@ class PaymentController extends Controller
         return redirect()
             ->route('payment.checkout', $order)
             ->with('status', __('Payment was canceled. You can try again.'));
+    }
+
+    protected function ensureShipmentForPaidOrder(Order $order): void
+    {
+        if ($order->shipments()->exists()) {
+            return;
+        }
+
+        Shipment::create([
+            'order_id' => $order->id,
+            // Tracking number is auto-generated in Shipment model when blank.
+            'carrier' => 'SafeNest Express',
+            'service_level' => 'Standard',
+            'status' => 'pending',
+            'expected_delivery_at' => now()->addDays(5),
+        ]);
     }
 }

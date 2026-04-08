@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\Shipment;
 use Illuminate\Support\Facades\Log;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
@@ -127,9 +128,27 @@ class StripeService
             'paid_at' => now(),
         ]);
 
+        $this->ensureShipmentForPaidOrder($order);
+
         Log::info('Payment succeeded', [
             'payment_id' => $payment->id,
             'order_id' => $order->id,
+        ]);
+    }
+
+    private function ensureShipmentForPaidOrder(Order $order): void
+    {
+        if ($order->shipments()->exists()) {
+            return;
+        }
+
+        Shipment::create([
+            'order_id' => $order->id,
+            // Tracking number is auto-generated in Shipment model when blank.
+            'carrier' => 'SafeNest Express',
+            'service_level' => 'Standard',
+            'status' => 'pending',
+            'expected_delivery_at' => now()->addDays(5),
         ]);
     }
 
