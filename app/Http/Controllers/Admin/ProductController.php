@@ -41,7 +41,7 @@ class ProductController extends Controller
 
     public function create(): View
     {
-        $categories = Category::active()->roots()->with('children')->get();
+        $categories = Category::active()->roots()->get();
 
         return view('admin.products.create', compact('categories'));
     }
@@ -100,7 +100,7 @@ class ProductController extends Controller
 
     public function edit(Product $product): View
     {
-        $categories = Category::active()->roots()->with('children')->get();
+        $categories = Category::active()->roots()->get();
         $product->load('categories');
 
         return view('admin.products.edit', compact('product', 'categories'));
