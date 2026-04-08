@@ -17,75 +17,117 @@ class CatalogSeeder extends Seeder
     public function run(): void
     {
         DB::transaction(function (): void {
-            $categories = collect([
-                'CCTV Cameras' => [
-                    'Smart Indoor Cameras',
-                    'Smart Outdoor Cameras',
-                    'Wireless Cameras',
-                    '4K Security Cameras',
+            $tree = [
+                [
+                    'name' => 'CCTV Cameras',
+                    'slug' => 'cctv-cameras',
+                    'summary' => 'Indoor, outdoor, wireless, and 4K security cameras.',
+                    'children' => [
+                        ['name' => 'Smart Indoor Cameras', 'slug' => 'smart-indoor-cameras', 'summary' => 'Compact and dome cameras for inside the home.'],
+                        ['name' => 'Smart Outdoor Cameras', 'slug' => 'smart-outdoor-cameras', 'summary' => 'Weatherproof cameras for yards and entrances.'],
+                        ['name' => 'Wireless Cameras', 'slug' => 'wireless-cameras', 'summary' => 'Battery and Wi-Fi security cameras.'],
+                        ['name' => '4K Security Cameras', 'slug' => '4k-security-cameras', 'summary' => 'Ultra HD video for maximum detail.'],
+                    ],
                 ],
-                'Motion Detectors' => [
-                    'PIR Motion Sensors',
-                    'Microwave Motion Sensors',
-                    'Dual Technology Sensors',
-                    'Pet-Immune Sensors',
+                [
+                    'name' => 'Motion Detectors',
+                    'slug' => 'motion-detectors',
+                    'summary' => 'PIR, microwave, dual-tech, and pet-immune sensors.',
+                    'children' => [
+                        ['name' => 'PIR Motion Sensors', 'slug' => 'pir-motion-sensors', 'summary' => 'Passive infrared motion detection.'],
+                        ['name' => 'Microwave Motion Sensors', 'slug' => 'microwave-motion-sensors', 'summary' => 'Microwave-based motion detection.'],
+                        ['name' => 'Dual Technology Sensors', 'slug' => 'dual-technology-sensors', 'summary' => 'Combined technologies for fewer false alarms.'],
+                        ['name' => 'Pet-Immune Sensors', 'slug' => 'pet-immune-sensors', 'summary' => 'Motion sensing that ignores most pets.'],
+                    ],
                 ],
-                'Smart Locks' => [
-                    'Keyless Entry Locks',
-                    'Biometric Locks',
-                    'Remote Access Locks',
-                    'Smart Deadbolts',
+                [
+                    'name' => 'Smart Locks',
+                    'slug' => 'smart-locks',
+                    'summary' => 'Keyless, biometric, remote access, and deadbolt locks.',
+                    'children' => [
+                        ['name' => 'Keyless Entry Locks', 'slug' => 'keyless-entry-locks', 'summary' => 'PIN and keypad entry without a physical key.'],
+                        ['name' => 'Biometric Locks', 'slug' => 'biometric-locks', 'summary' => 'Fingerprint and biometric verification.'],
+                        ['name' => 'Remote Access Locks', 'slug' => 'remote-access-locks', 'summary' => 'App and remote unlock from anywhere.'],
+                        ['name' => 'Smart Deadbolts', 'slug' => 'smart-deadbolts', 'summary' => 'Connected deadbolts for standard doors.'],
+                    ],
                 ],
-                'Digital Doorbells' => [
-                    'Video Doorbells',
-                    'Wi-Fi Doorbells',
-                    'Wired Doorbells',
-                    'Battery Doorbells',
+                [
+                    'name' => 'Digital Doorbells',
+                    'slug' => 'digital-doorbells',
+                    'summary' => 'Video, Wi-Fi, wired, and battery doorbells.',
+                    'children' => [
+                        ['name' => 'Video Doorbells', 'slug' => 'video-doorbells', 'summary' => 'HD video at your door.'],
+                        ['name' => 'Wi-Fi Doorbells', 'slug' => 'wifi-doorbells', 'summary' => 'Wireless connectivity and app alerts.'],
+                        ['name' => 'Wired Doorbells', 'slug' => 'wired-doorbells', 'summary' => 'Powered from existing doorbell wiring.'],
+                        ['name' => 'Battery Doorbells', 'slug' => 'battery-doorbells', 'summary' => 'No wiring required; rechargeable or replaceable battery.'],
+                    ],
                 ],
-                'Alarm Systems' => [
-                    'Home Alarm Systems',
-                    'Wireless Alarms',
-                    'Monitored Alarms',
-                    'DIY Alarm Kits',
+                [
+                    'name' => 'Alarm Systems',
+                    'slug' => 'alarm-systems',
+                    'summary' => 'Home alarms, wireless kits, monitoring, and DIY systems.',
+                    'children' => [
+                        ['name' => 'Home Alarm Systems', 'slug' => 'home-alarm-systems', 'summary' => 'Full home alarm packages.'],
+                        ['name' => 'Wireless Alarms', 'slug' => 'wireless-alarms', 'summary' => 'Cable-free sensors and sirens.'],
+                        ['name' => 'Monitored Alarms', 'slug' => 'monitored-alarms', 'summary' => 'Professional or app-based monitoring.'],
+                        ['name' => 'DIY Alarm Kits', 'slug' => 'diy-alarm-kits', 'summary' => 'Self-install starter and expansion kits.'],
+                    ],
                 ],
-                'Biometric Access Controls' => [
-                    'Fingerprint Scanners',
-                    'Facial Recognition',
-                    'Iris Scanners',
-                    'Access Control Panels',
+                [
+                    'name' => 'Biometric Access Controls',
+                    'slug' => 'biometric-access-controls',
+                    'summary' => 'Fingerprint, facial, iris, and access panels.',
+                    'children' => [
+                        ['name' => 'Fingerprint Scanners', 'slug' => 'fingerprint-scanners', 'summary' => 'Standalone or integrated fingerprint readers.'],
+                        ['name' => 'Facial Recognition', 'slug' => 'facial-recognition', 'summary' => 'Face-based access and verification.'],
+                        ['name' => 'Iris Scanners', 'slug' => 'iris-scanners', 'summary' => 'Iris and eye-based biometric systems.'],
+                        ['name' => 'Access Control Panels', 'slug' => 'access-control-panels', 'summary' => 'Central panels for secure entry.'],
+                    ],
                 ],
-                'Automation & Hubs' => [
-                    'Security Hubs',
-                    'AI Assistants',
-                    'Lighting Automation',
-                    'Smart Home Controllers',
+                [
+                    'name' => 'Automation & Hubs',
+                    'slug' => 'automation-hubs',
+                    'summary' => 'Security hubs, assistants, lighting, and controllers.',
+                    'children' => [
+                        ['name' => 'Security Hubs', 'slug' => 'security-hubs', 'summary' => 'Central brains for sensors and alarms.'],
+                        ['name' => 'AI Assistants', 'slug' => 'ai-assistants', 'summary' => 'Voice and AI-powered home assistants.'],
+                        ['name' => 'Lighting Automation', 'slug' => 'lighting-automation', 'summary' => 'Smart lighting and schedules.'],
+                        ['name' => 'Smart Home Controllers', 'slug' => 'smart-home-controllers', 'summary' => 'Multi-protocol smart home control.'],
+                    ],
                 ],
-            ])->map(function (array $children, string $parentName) {
-                $parent = Category::query()->firstOrCreate(
-                    ['slug' => Str::slug($parentName)],
+            ];
+
+            $categoriesBySlug = collect();
+
+            foreach ($tree as $sort => $root) {
+                $parent = Category::query()->updateOrCreate(
+                    ['slug' => $root['slug']],
                     [
-                        'uuid' => (string) Str::uuid(),
-                        'name' => $parentName,
-                        'summary' => "Explore SafeNest {$parentName} to monitor and secure your property.",
-                        'description' => "Trusted {$parentName} engineered for resilient SafeNest households.",
+                        'parent_id' => null,
+                        'name' => $root['name'],
+                        'summary' => $root['summary'],
+                        'description' => $root['summary'],
+                        'is_active' => true,
+                        'sort_order' => $sort,
                     ]
                 );
+                $categoriesBySlug->put($parent->slug, $parent);
 
-                $childRecords = collect($children)->map(function (string $child) use ($parent) {
-                    return Category::query()->firstOrCreate(
-                        ['slug' => Str::slug($child)],
+                foreach ($root['children'] as $cSort => $childRow) {
+                    $child = Category::query()->updateOrCreate(
+                        ['slug' => $childRow['slug']],
                         [
-                            'uuid' => (string) Str::uuid(),
                             'parent_id' => $parent->id,
-                            'name' => $child,
-                            'summary' => "Curated {$child} for modern SafeNest deployments.",
-                            'description' => "{$child} optimized for SafeNest AI orchestration.",
+                            'name' => $childRow['name'],
+                            'summary' => $childRow['summary'],
+                            'description' => $childRow['summary'],
+                            'is_active' => true,
+                            'sort_order' => $cSort,
                         ]
                     );
-                });
-
-                return collect([$parent])->merge($childRecords);
-            })->flatten();
+                    $categoriesBySlug->put($child->slug, $child);
+                }
+            }
 
             // Real product data
             $realProducts = [
@@ -98,7 +140,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 299.99,
                     'rating_average' => 4.7,
                     'reviews_count' => 1245,
-                    'category_slug' => 'cctv-cameras',
+                    'category_slug' => '4k-security-cameras',
                 ],
                 [
                     'name' => 'Smart Motion Detector Pro',
@@ -109,7 +151,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 99.99,
                     'rating_average' => 4.5,
                     'reviews_count' => 892,
-                    'category_slug' => 'motion-detectors',
+                    'category_slug' => 'pir-motion-sensors',
                 ],
                 [
                     'name' => 'Biometric Smart Lock Elite',
@@ -120,7 +162,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 399.99,
                     'rating_average' => 4.8,
                     'reviews_count' => 2156,
-                    'category_slug' => 'smart-locks',
+                    'category_slug' => 'biometric-locks',
                 ],
                 [
                     'name' => 'Video Doorbell Pro 2K',
@@ -131,7 +173,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 249.99,
                     'rating_average' => 4.6,
                     'reviews_count' => 1876,
-                    'category_slug' => 'digital-doorbells',
+                    'category_slug' => 'video-doorbells',
                 ],
                 [
                     'name' => 'Wireless Home Alarm System',
@@ -142,7 +184,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 599.99,
                     'rating_average' => 4.4,
                     'reviews_count' => 634,
-                    'category_slug' => 'alarm-systems',
+                    'category_slug' => 'wireless-alarms',
                 ],
                 [
                     'name' => 'Facial Recognition Access Control',
@@ -153,7 +195,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 999.99,
                     'rating_average' => 4.9,
                     'reviews_count' => 423,
-                    'category_slug' => 'biometric-access-controls',
+                    'category_slug' => 'facial-recognition',
                 ],
                 [
                     'name' => 'SafeNest AI Security Hub',
@@ -164,7 +206,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 349.99,
                     'rating_average' => 4.7,
                     'reviews_count' => 1123,
-                    'category_slug' => 'automation-hubs',
+                    'category_slug' => 'security-hubs',
                 ],
                 [
                     'name' => 'Indoor Security Camera 1080p',
@@ -175,7 +217,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 159.99,
                     'rating_average' => 4.5,
                     'reviews_count' => 2341,
-                    'category_slug' => 'cctv-cameras',
+                    'category_slug' => 'smart-indoor-cameras',
                 ],
                 [
                     'name' => 'Glass Break Sensor',
@@ -186,7 +228,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 79.99,
                     'rating_average' => 4.3,
                     'reviews_count' => 567,
-                    'category_slug' => 'motion-detectors',
+                    'category_slug' => 'dual-technology-sensors',
                 ],
                 [
                     'name' => 'Keyless Entry Smart Lock',
@@ -197,7 +239,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 279.99,
                     'rating_average' => 4.6,
                     'reviews_count' => 1456,
-                    'category_slug' => 'smart-locks',
+                    'category_slug' => 'keyless-entry-locks',
                 ],
                 [
                     'name' => 'Battery Video Doorbell',
@@ -208,7 +250,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 219.99,
                     'rating_average' => 4.4,
                     'reviews_count' => 987,
-                    'category_slug' => 'digital-doorbells',
+                    'category_slug' => 'battery-doorbells',
                 ],
                 [
                     'name' => 'DIY Alarm Kit Starter',
@@ -219,7 +261,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 249.99,
                     'rating_average' => 4.2,
                     'reviews_count' => 445,
-                    'category_slug' => 'alarm-systems',
+                    'category_slug' => 'diy-alarm-kits',
                 ],
                 [
                     'name' => 'Fingerprint Scanner Pro',
@@ -230,7 +272,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 549.99,
                     'rating_average' => 4.7,
                     'reviews_count' => 678,
-                    'category_slug' => 'biometric-access-controls',
+                    'category_slug' => 'fingerprint-scanners',
                 ],
                 [
                     'name' => 'Smart Home Controller Hub',
@@ -241,7 +283,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 229.99,
                     'rating_average' => 4.5,
                     'reviews_count' => 1234,
-                    'category_slug' => 'automation-hubs',
+                    'category_slug' => 'smart-home-controllers',
                 ],
                 [
                     'name' => 'Outdoor PTZ Security Camera',
@@ -252,7 +294,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 499.99,
                     'rating_average' => 4.8,
                     'reviews_count' => 789,
-                    'category_slug' => 'cctv-cameras',
+                    'category_slug' => 'smart-outdoor-cameras',
                 ],
                 [
                     'name' => 'Pet-Immune Motion Sensor',
@@ -263,7 +305,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 109.99,
                     'rating_average' => 4.6,
                     'reviews_count' => 1123,
-                    'category_slug' => 'motion-detectors',
+                    'category_slug' => 'pet-immune-sensors',
                 ],
                 [
                     'name' => 'Smart Deadbolt Lock',
@@ -274,7 +316,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 329.99,
                     'rating_average' => 4.5,
                     'reviews_count' => 876,
-                    'category_slug' => 'smart-locks',
+                    'category_slug' => 'smart-deadbolts',
                 ],
                 [
                     'name' => 'Wired Video Doorbell 4K',
@@ -285,7 +327,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 299.99,
                     'rating_average' => 4.7,
                     'reviews_count' => 1567,
-                    'category_slug' => 'digital-doorbells',
+                    'category_slug' => 'wired-doorbells',
                 ],
                 // New Featured Products with Custom Images
                 [
@@ -297,7 +339,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 229.99,
                     'rating_average' => 4.8,
                     'reviews_count' => 2341,
-                    'category_slug' => 'cctv-cameras',
+                    'category_slug' => 'wireless-cameras',
                     'custom_image' => '/images/products/bullet-security-camera.jpg',
                 ],
                 [
@@ -309,7 +351,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 179.99,
                     'rating_average' => 4.6,
                     'reviews_count' => 1876,
-                    'category_slug' => 'cctv-cameras',
+                    'category_slug' => 'smart-indoor-cameras',
                     'custom_image' => '/images/products/spherical-security-camera.jpg',
                 ],
                 [
@@ -321,7 +363,7 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 269.99,
                     'rating_average' => 4.7,
                     'reviews_count' => 2156,
-                    'category_slug' => 'digital-doorbells',
+                    'category_slug' => 'wifi-doorbells',
                     'custom_image' => '/images/products/smart-door-camera.jpg',
                 ],
                 [
@@ -333,15 +375,15 @@ class CatalogSeeder extends Seeder
                     'compare_at_price' => 399.99,
                     'rating_average' => 4.9,
                     'reviews_count' => 3124,
-                    'category_slug' => 'smart-locks',
+                    'category_slug' => 'biometric-locks',
                     'custom_image' => '/images/products/smart-door-lock.jpg',
                 ],
             ];
 
             foreach ($realProducts as $productData) {
-                $category = $categories->firstWhere('slug', $productData['category_slug']);
+                $category = $categoriesBySlug->get($productData['category_slug']);
                 if (! $category) {
-                    $category = $categories->first();
+                    $category = $categoriesBySlug->first();
                 }
 
                 $product = Product::create([
@@ -380,7 +422,7 @@ class CatalogSeeder extends Seeder
         });
     }
 
-    protected function seedMedia(Product $product, string $categorySlug = 'cctv-cameras', ?string $customImage = null): void
+    protected function seedMedia(Product $product, string $categorySlug = 'cameras', ?string $customImage = null): void
     {
         // Use custom image if provided
         if ($customImage) {
@@ -398,45 +440,52 @@ class CatalogSeeder extends Seeder
             return;
         }
 
+        $group = $this->resolveVisualGroup($categorySlug);
+
         $imageMap = [
-            'cctv-cameras' => [
+            'cameras' => [
                 'https://images.unsplash.com/photo-1580894908361-967195033215?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1535905496755-26ae35d0ae54?auto=format&fit=crop&w=1200&q=80',
             ],
-            'motion-detectors' => [
+            'mini-cameras' => [
+                'https://images.unsplash.com/photo-1619641805847-f218f12ddbf5?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?auto=format&fit=crop&w=1200&q=80',
+            ],
+            'motion-sensors' => [
                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
             ],
-            'smart-locks' => [
-                'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
-            ],
-            'digital-doorbells' => [
+            'smart-doorbell' => [
                 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1580894908361-967195033215?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1200&q=80',
             ],
-            'alarm-systems' => [
+            'alarms' => [
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
             ],
-            'biometric-access-controls' => [
+            'smart-locks' => [
+                'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1558002038-bb4237ef54e9?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80',
+            ],
+            'biometric' => [
                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
-                'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
+                'https://images.unsplash.com/photo-1558002038-bb4237ef54e9?auto=format&fit=crop&w=1200&q=80',
             ],
-            'automation-hubs' => [
+            'hubs' => [
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80',
                 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?auto=format&fit=crop&w=1200&q=80',
             ],
         ];
 
-        $images = $imageMap[$categorySlug] ?? $imageMap['cctv-cameras'];
+        $images = $imageMap[$group] ?? $imageMap['cameras'];
 
         foreach ($images as $index => $url) {
             ProductMedia::create([
@@ -452,10 +501,12 @@ class CatalogSeeder extends Seeder
         }
     }
 
-    protected function seedSpecifications(Product $product, string $categorySlug = 'cctv-cameras'): void
+    protected function seedSpecifications(Product $product, string $categorySlug = 'cameras'): void
     {
+        $group = $this->resolveVisualGroup($categorySlug);
+
         $specsMap = [
-            'cctv-cameras' => [
+            'cameras' => [
                 ['group' => 'Video', 'name' => 'Resolution', 'value' => Arr::random(['1080p HD', '2K HD', '4K UHD'])],
                 ['group' => 'Video', 'name' => 'Field of View', 'value' => Arr::random(['110°', '130°', '150°', '180°'])],
                 ['group' => 'Night Vision', 'name' => 'Range', 'value' => Arr::random(['30ft', '50ft', '100ft'])],
@@ -463,7 +514,15 @@ class CatalogSeeder extends Seeder
                 ['group' => 'Durability', 'name' => 'Weather Rating', 'value' => Arr::random(['IP65', 'IP66', 'IP67'])],
                 ['group' => 'Power', 'name' => 'Power Source', 'value' => Arr::random(['Wired', 'Battery', 'Solar + Battery'])],
             ],
-            'motion-detectors' => [
+            'mini-cameras' => [
+                ['group' => 'Video', 'name' => 'Resolution', 'value' => Arr::random(['720p HD', '1080p HD', '2K HD'])],
+                ['group' => 'Design', 'name' => 'Form Factor', 'value' => Arr::random(['Compact', 'Cube', 'Spherical', 'Stick-on'])],
+                ['group' => 'Features', 'name' => 'Pan / Tilt', 'value' => Arr::random(['Fixed', 'Pan only', 'Pan + Tilt'])],
+                ['group' => 'Connectivity', 'name' => 'Wireless', 'value' => Arr::random(['Wi-Fi 6', 'Wi-Fi 5', 'Ethernet'])],
+                ['group' => 'Privacy', 'name' => 'Privacy Mode', 'value' => Arr::random(['Yes', 'Scheduled', 'Manual shutter'])],
+                ['group' => 'Power', 'name' => 'Power Source', 'value' => Arr::random(['USB-C', 'Battery', 'Wired'])],
+            ],
+            'motion-sensors' => [
                 ['group' => 'Detection', 'name' => 'Range', 'value' => Arr::random(['20ft', '30ft', '40ft'])],
                 ['group' => 'Detection', 'name' => 'Field of View', 'value' => Arr::random(['90°', '110°', '120°'])],
                 ['group' => 'Power', 'name' => 'Battery Life', 'value' => Arr::random(['1 year', '2 years', '3 years'])],
@@ -477,26 +536,26 @@ class CatalogSeeder extends Seeder
                 ['group' => 'Connectivity', 'name' => 'Wireless', 'value' => Arr::random(['Wi-Fi', 'Zigbee', 'Z-Wave', 'Bluetooth'])],
                 ['group' => 'Compatibility', 'name' => 'Door Type', 'value' => Arr::random(['Standard Deadbolt', 'Mortise Lock', 'Both'])],
             ],
-            'digital-doorbells' => [
+            'smart-doorbell' => [
                 ['group' => 'Video', 'name' => 'Resolution', 'value' => Arr::random(['1080p HD', '2K HD', '4K UHD'])],
                 ['group' => 'Video', 'name' => 'Field of View', 'value' => Arr::random(['160°', '180°', '200°'])],
                 ['group' => 'Power', 'name' => 'Power Source', 'value' => Arr::random(['Wired', 'Battery', 'Both'])],
                 ['group' => 'Features', 'name' => 'Two-Way Audio', 'value' => 'Yes'],
                 ['group' => 'Features', 'name' => 'Package Detection', 'value' => Arr::random(['Yes', 'No'])],
             ],
-            'alarm-systems' => [
+            'alarms' => [
                 ['group' => 'Components', 'name' => 'Sensors Included', 'value' => Arr::random(['5 sensors', '8 sensors', '10 sensors'])],
                 ['group' => 'Connectivity', 'name' => 'Connection', 'value' => Arr::random(['Wireless', 'Wired', 'Hybrid'])],
                 ['group' => 'Monitoring', 'name' => 'Monitoring', 'value' => Arr::random(['Self-Monitored', 'Professional', 'Both'])],
                 ['group' => 'Power', 'name' => 'Backup Battery', 'value' => Arr::random(['8 hours', '24 hours', '48 hours'])],
             ],
-            'biometric-access-controls' => [
+            'biometric' => [
                 ['group' => 'Biometric', 'name' => 'Recognition Type', 'value' => Arr::random(['Fingerprint', 'Facial', 'Iris', 'Multi-Modal'])],
                 ['group' => 'Capacity', 'name' => 'User Capacity', 'value' => Arr::random(['100 users', '500 users', '1000 users'])],
                 ['group' => 'Security', 'name' => 'Accuracy', 'value' => Arr::random(['99.5%', '99.7%', '99.9%'])],
                 ['group' => 'Features', 'name' => 'Anti-Spoofing', 'value' => 'Yes'],
             ],
-            'automation-hubs' => [
+            'hubs' => [
                 ['group' => 'Connectivity', 'name' => 'Supported Protocols', 'value' => Arr::random(['Zigbee + Z-Wave', 'Zigbee + Wi-Fi', 'All Protocols'])],
                 ['group' => 'Capacity', 'name' => 'Device Limit', 'value' => Arr::random(['50 devices', '100 devices', 'Unlimited'])],
                 ['group' => 'Features', 'name' => 'Voice Control', 'value' => Arr::random(['Alexa', 'Google', 'Both'])],
@@ -504,7 +563,7 @@ class CatalogSeeder extends Seeder
             ],
         ];
 
-        $specs = $specsMap[$categorySlug] ?? $specsMap['cctv-cameras'];
+        $specs = $specsMap[$group] ?? $specsMap['cameras'];
 
         foreach ($specs as $index => $spec) {
             ProductSpecification::create([
@@ -515,6 +574,24 @@ class CatalogSeeder extends Seeder
                 'display_order' => $index,
             ]);
         }
+    }
+
+    /**
+     * Map catalog category slug (including parent/child slugs) to media/spec template group.
+     */
+    protected function resolveVisualGroup(string $categorySlug): string
+    {
+        return match (true) {
+            in_array($categorySlug, ['cctv-cameras', 'smart-outdoor-cameras', 'wireless-cameras', '4k-security-cameras'], true) => 'cameras',
+            $categorySlug === 'smart-indoor-cameras' => 'mini-cameras',
+            in_array($categorySlug, ['motion-detectors', 'pir-motion-sensors', 'microwave-motion-sensors', 'dual-technology-sensors', 'pet-immune-sensors'], true) => 'motion-sensors',
+            in_array($categorySlug, ['smart-locks', 'keyless-entry-locks', 'biometric-locks', 'remote-access-locks', 'smart-deadbolts'], true) => 'smart-locks',
+            in_array($categorySlug, ['digital-doorbells', 'video-doorbells', 'wifi-doorbells', 'wired-doorbells', 'battery-doorbells'], true) => 'smart-doorbell',
+            in_array($categorySlug, ['alarm-systems', 'home-alarm-systems', 'wireless-alarms', 'monitored-alarms', 'diy-alarm-kits'], true) => 'alarms',
+            in_array($categorySlug, ['biometric-access-controls', 'fingerprint-scanners', 'facial-recognition', 'iris-scanners', 'access-control-panels'], true) => 'biometric',
+            in_array($categorySlug, ['automation-hubs', 'security-hubs', 'ai-assistants', 'lighting-automation', 'smart-home-controllers'], true) => 'hubs',
+            default => 'cameras',
+        };
     }
 
     protected function seedInventory(Product $product): void

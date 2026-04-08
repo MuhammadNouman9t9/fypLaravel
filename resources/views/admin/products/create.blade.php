@@ -65,36 +65,25 @@
                         <textarea name="description" rows="4" class="form-control">{{ old('description') }}</textarea>
                     </div>
 
-                    <div class="col-12">
-                        <label class="form-label mb-2">Categories</label>
-                        <div class="row g-2">
-                            @foreach ($categories as $category)
-                                <div class="col-12 col-md-6">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="categories[]" value="{{ $category->id }}" class="form-check-input" id="create-cat-{{ $category->id }}">
-                                        <label class="form-check-label" for="create-cat-{{ $category->id }}">{{ $category->name }}</label>
-                                    </div>
-                                </div>
-                                @foreach ($category->children as $child)
-                                    <div class="col-12 col-md-6 ps-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="categories[]" value="{{ $child->id }}" class="form-check-input" id="create-cat-{{ $child->id }}">
-                                            <label class="form-check-label" for="create-cat-{{ $child->id }}">{{ $child->name }}</label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endforeach
-                        </div>
-                    </div>
+                    @include('admin.products.partials.category-fields', [
+                        'categories' => $categories,
+                        'selectedIds' => old('categories', []),
+                    ])
 
-                    <div class="col-12 d-flex flex-wrap gap-4">
-                        <div class="form-check">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="form-check-input" id="create-is-active">
-                            <label class="form-check-label" for="create-is-active">Active</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="form-check-input" id="create-is-featured">
-                            <label class="form-check-label" for="create-is-featured">Featured</label>
+                    <div class="col-12">
+                        <div class="border rounded-3 p-3 bg-body-secondary bg-opacity-10">
+                            <div class="fw-semibold small text-body-secondary mb-2">Visibility</div>
+                            <div class="d-flex flex-wrap gap-4">
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} class="form-check-input" id="create-is-active">
+                                    <label class="form-check-label" for="create-is-active">Active</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured') ? 'checked' : '' }} class="form-check-input" id="create-is-featured">
+                                    <label class="form-check-label" for="create-is-featured">Featured</label>
+                                </div>
+                            </div>
+                            <p class="form-text mb-0 small">Inactive products are hidden from the storefront. Featured products can be highlighted in listings.</p>
                         </div>
                     </div>
                 </div>

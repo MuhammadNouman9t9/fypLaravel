@@ -71,36 +71,25 @@
                         <textarea name="description" rows="4" class="form-control">{{ old('description', $product->description) }}</textarea>
                     </div>
 
-                    <div class="col-12">
-                        <label class="form-label mb-2">Categories</label>
-                        <div class="row g-2">
-                            @foreach ($categories as $category)
-                                <div class="col-12 col-md-6">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="categories[]" value="{{ $category->id }}" {{ $product->categories->contains($category->id) ? 'checked' : '' }} class="form-check-input" id="cat-{{ $category->id }}">
-                                        <label class="form-check-label" for="cat-{{ $category->id }}">{{ $category->name }}</label>
-                                    </div>
-                                </div>
-                                @foreach ($category->children as $child)
-                                    <div class="col-12 col-md-6 ps-md-4">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="categories[]" value="{{ $child->id }}" {{ $product->categories->contains($child->id) ? 'checked' : '' }} class="form-check-input" id="cat-{{ $child->id }}">
-                                            <label class="form-check-label" for="cat-{{ $child->id }}">{{ $child->name }}</label>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endforeach
-                        </div>
-                    </div>
+                    @include('admin.products.partials.category-fields', [
+                        'categories' => $categories,
+                        'selectedIds' => old('categories', $product->categories->pluck('id')->all()),
+                    ])
 
-                    <div class="col-12 d-flex flex-wrap gap-4">
-                        <div class="form-check">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} class="form-check-input" id="is-active">
-                            <label class="form-check-label" for="is-active">Active</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }} class="form-check-input" id="is-featured">
-                            <label class="form-check-label" for="is-featured">Featured</label>
+                    <div class="col-12">
+                        <div class="border rounded-3 p-3 bg-body-secondary bg-opacity-10">
+                            <div class="fw-semibold small text-body-secondary mb-2">Visibility</div>
+                            <div class="d-flex flex-wrap gap-4">
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_active" value="1" {{ old('is_active', $product->is_active) ? 'checked' : '' }} class="form-check-input" id="is-active">
+                                    <label class="form-check-label" for="is-active">Active</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }} class="form-check-input" id="is-featured">
+                                    <label class="form-check-label" for="is-featured">Featured</label>
+                                </div>
+                            </div>
+                            <p class="form-text mb-0 small">Inactive products are hidden from the storefront. Featured products can be highlighted in listings.</p>
                         </div>
                     </div>
                 </div>

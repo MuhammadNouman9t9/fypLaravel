@@ -85,11 +85,7 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->filled('categories')) {
-            $product->categories()->attach($request->categories, [
-                'is_primary' => $request->categories[0] ?? false,
-            ]);
-        }
+        $this->syncProductCategories($product, $request->input('categories'));
 
         return redirect()->route('admin.products.index')
             ->with('status', __('Product created successfully.'));
@@ -151,11 +147,7 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->filled('categories')) {
-            $product->categories()->sync($request->categories);
-        } else {
-            $product->categories()->detach();
-        }
+        $this->syncProductCategories($product, $request->input('categories'));
 
         return redirect()->route('admin.products.index')
             ->with('status', __('Product updated successfully.'));
@@ -167,5 +159,28 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('status', __('Product deleted successfully.'));
+    }
+
+    /**
+     * @param  array<int, mixed>|null  $categoryIds
+     */
+    protected function syncProductCategories(Product $product, ?array $categoryIds): void
+    {
+        if (empty($categoryIds)) {
+            $product->categories()->detach();
+
+            return;
+        }
+
+        $ids = array_values(array_unique(array_map(static fn ($id): int => (int) $id, $categoryIds)));
+        $sync = [];
+        foreach ($ids as $index => $id) {
+            $sync[$id] = [
+                'is_primary' => $index === 0,
+                'assigned_at' => now(),
+            ];
+        }
+
+        $product->categories()->sync($sync);
     }
 }
