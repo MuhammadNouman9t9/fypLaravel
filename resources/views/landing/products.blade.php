@@ -241,48 +241,5 @@
         </div>
     </div>
 
-    <script>
-        (function () {
-            const form = document.getElementById('ai-chatbot-form');
-            const input = document.getElementById('ai-chatbot-input');
-            const messages = document.getElementById('ai-chatbot-messages');
-
-            if (!form || !input || !messages) return;
-
-            const appendMessage = (label, text) => {
-                const row = document.createElement('div');
-                row.className = 'small mb-2';
-                row.innerHTML = `<strong>${label}:</strong> ${text}`;
-                messages.appendChild(row);
-                messages.scrollTop = messages.scrollHeight;
-            };
-
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
-
-                const message = input.value.trim();
-                if (!message) return;
-
-                appendMessage('You', message);
-                input.value = '';
-
-                try {
-                    const response = await fetch('{{ route('chatbot.chat', absolute: false) }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ message })
-                    });
-
-                    const data = await response.json();
-                    appendMessage('AI', data.message || 'Unable to generate a response right now.');
-                } catch (error) {
-                    appendMessage('AI', 'Chat service temporarily unavailable.');
-                }
-            });
-        })();
-    </script>
+    <script src="{{ asset('js/products-ai.js') }}" defer></script>
 </x-landing-layout>
