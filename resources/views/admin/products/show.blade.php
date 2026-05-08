@@ -34,7 +34,7 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
                     <h3 class="mb-2">{{ $product->name }}</h3>
-                    <p class="text-muted mb-3">{{ $product->summary ?: 'No summary provided.' }}</p>
+                    <p class="text-muted mb-3">{{ $product->description ?: 'No description provided.' }}</p>
 
                     <div class="row g-3">
                         <div class="col-12 col-md-6">

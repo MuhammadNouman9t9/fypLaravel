@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('name');
             $table->string('brand')->nullable();
-            $table->string('summary', 512)->nullable();
             $table->text('description')->nullable();
             $table->decimal('price', 10, 2);
             $table->decimal('compare_at_price', 10, 2)->nullable();

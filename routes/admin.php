@@ -6,14 +6,14 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SupportController;
 use App\Http\Controllers\Admin\UserController;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
 
-// Admin Login Routes (public, but redirects if already logged in as admin)
+// Admin Login Routes (public, but redirects if already logged in as admin).
+// Throttle only the POST (login attempt), so the GET form stays accessible
+// even after a series of failures.
 Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AdminLoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AdminLoginController::class, 'login'])
-        ->withoutMiddleware([VerifyCsrfToken::class]);
+    Route::post('login', [AdminLoginController::class, 'login'])->middleware('throttle:5,1');
 });
 
 // Admin Protected Routes
@@ -21,9 +21,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('products', ProductController::class);
-    Route::resource('users', UserController::class)->only(['index', 'show', 'destroy']);
-    Route::post('users/{user}/restrict', [UserController::class, 'restrict'])->name('users.restrict');
+    // Literal-path routes MUST come before resource('users') so /users/delete-all isn't
+    // captured by /users/{user}.
     Route::delete('users/delete-all', [UserController::class, 'deleteAll'])->name('users.delete-all');
+    Route::post('users/{user}/restrict', [UserController::class, 'restrict'])->name('users.restrict');
+    Route::resource('users', UserController::class)->only(['index', 'show', 'destroy']);
 
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');

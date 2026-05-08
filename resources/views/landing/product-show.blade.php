@@ -133,15 +133,6 @@
                             </div>
                         </div>
 
-                        @if ($product->summary)
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h3 class="h6 fw-bold">Quick Overview</h3>
-                                    <p class="text-secondary mb-0">{{ $product->summary }}</p>
-                                </div>
-                            </div>
-                        @endif
-
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
                                 <form action="{{ route('cart.store') }}" method="POST">

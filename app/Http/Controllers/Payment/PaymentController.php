@@ -26,6 +26,8 @@ class PaymentController extends Controller
 
     public function checkout(Order $order): View|RedirectResponse
     {
+        abort_if($order->user_id !== auth()->id(), 403);
+
         if ($order->payment_status === 'paid') {
             return redirect()
                 ->route('orders.show', $order)
@@ -74,6 +76,7 @@ class PaymentController extends Controller
     public function process(ProcessPaymentRequest $request): JsonResponse|RedirectResponse
     {
         $order = Order::findOrFail($request->validated('order_id'));
+        abort_if($order->user_id !== auth()->id(), 403);
         $paymentIntentId = $request->validated('payment_intent_id');
 
         $payment = Payment::where('order_id', $order->id)
@@ -235,12 +238,11 @@ class PaymentController extends Controller
 
     public function webhook(Request $request): Response
     {
-        $payload = $request->all();
         $sigHeader = $request->header('Stripe-Signature');
         $webhookSecret = config('services.stripe.webhook_secret');
 
         try {
-            \Stripe\Webhook::constructEvent(
+            $event = \Stripe\Webhook::constructEvent(
                 $request->getContent(),
                 $sigHeader,
                 $webhookSecret
@@ -259,13 +261,23 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Webhook error'], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->stripeService->handleWebhook($payload);
+        // Idempotency: Stripe retries deliver the same event.id. Ignore duplicates
+        // so we don't double-fulfill orders or duplicate shipments.
+        $cacheKey = 'stripe_webhook_event:'.$event->id;
+        if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
+            return response()->json(['received' => true, 'duplicate' => true]);
+        }
+        \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addDays(7));
+
+        $this->stripeService->handleWebhook($event->toArray());
 
         return response()->json(['received' => true]);
     }
 
     public function success(Order $order): View|RedirectResponse
     {
+        abort_if($order->user_id !== auth()->id(), 403);
+
         if ($order->payment_status !== 'paid') {
             return redirect()
                 ->route('payment.checkout', $order)
@@ -279,6 +291,8 @@ class PaymentController extends Controller
 
     public function cancel(Order $order): RedirectResponse
     {
+        abort_if($order->user_id !== auth()->id(), 403);
+
         return redirect()
             ->route('payment.checkout', $order)
             ->with('status', __('Payment was canceled. You can try again.'));

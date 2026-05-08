@@ -2,26 +2,18 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+// Note: WithoutModelEvents was intentionally removed. It suppressed `creating`
+// hooks (uuid, slug, sku auto-generation) and forced every seeder to set those
+// fields manually — fragile and easy to forget.
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     public function run(): void
     {
-        User::factory()->create([
-            'first_name' => 'Safe',
-            'last_name' => 'Nest',
-            'email' => 'admin@safenest.test',
-            'preferred_language' => 'en',
-            'marketing_opt_in' => true,
-        ]);
-
         $this->call([
             RoleSeeder::class,
+            AdminSeeder::class,
             CatalogSeeder::class,
         ]);
     }

@@ -32,12 +32,11 @@
                     @endif
                 </a>
 
+                {{-- Admin link is intentionally NOT shown to guests. Admins access /admin/login directly. --}}
                 @auth
                     @if (auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm">{{ __('Admin') }}</a>
                     @endif
-                @else
-                    <a href="{{ route('admin.login') }}" class="btn btn-outline-secondary btn-sm">{{ __('Admin') }}</a>
                 @endauth
 
                 @auth

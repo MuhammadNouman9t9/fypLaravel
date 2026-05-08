@@ -103,6 +103,7 @@ class CatalogSeeder extends Seeder
                 $parent = Category::query()->updateOrCreate(
                     ['slug' => $root['slug']],
                     [
+                        'uuid' => (string) Str::uuid(),
                         'parent_id' => null,
                         'name' => $root['name'],
                         'summary' => $root['summary'],
@@ -117,6 +118,7 @@ class CatalogSeeder extends Seeder
                     $child = Category::query()->updateOrCreate(
                         ['slug' => $childRow['slug']],
                         [
+                            'uuid' => (string) Str::uuid(),
                             'parent_id' => $parent->id,
                             'name' => $childRow['name'],
                             'summary' => $childRow['summary'],
@@ -392,7 +394,6 @@ class CatalogSeeder extends Seeder
                     'slug' => Str::slug($productData['name']),
                     'name' => $productData['name'],
                     'brand' => $productData['brand'],
-                    'summary' => $productData['summary'],
                     'description' => $productData['description'],
                     'price' => $productData['price'],
                     'compare_at_price' => $productData['compare_at_price'],

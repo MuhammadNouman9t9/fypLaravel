@@ -47,10 +47,14 @@ Route::post('/payment/webhook/stripe', [\App\Http\Controllers\Payment\PaymentCon
 
 // Risk Analyzer Routes
 Route::get('/risk-analyzer', [\App\Http\Controllers\RiskAnalyzerController::class, 'index'])->name('risk-analyzer.index');
-Route::post('/risk-analyzer/analyze', [\App\Http\Controllers\RiskAnalyzerController::class, 'analyze'])->name('risk-analyzer.analyze');
+Route::post('/risk-analyzer/analyze', [\App\Http\Controllers\RiskAnalyzerController::class, 'analyze'])
+    ->middleware('throttle:10,1')
+    ->name('risk-analyzer.analyze');
 Route::get('/risk-analyzer/{uuid}', [\App\Http\Controllers\RiskAnalyzerController::class, 'show'])->name('risk-analyzer.show');
 
 // Chatbot Routes
-Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])->name('chatbot.chat');
+Route::post('/chatbot/chat', [\App\Http\Controllers\ChatbotController::class, 'chat'])
+    ->middleware('throttle:30,1')
+    ->name('chatbot.chat');
 
 require __DIR__.'/auth.php';

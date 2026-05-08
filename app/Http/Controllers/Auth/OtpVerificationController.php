@@ -45,17 +45,7 @@ class OtpVerificationController extends Controller
             return back()->withErrors(['channel' => 'Email address is required to send OTP via email.']);
         }
 
-        $otp = $user->sendOtp('email');
-
-        // Log OTP for debugging (only in development)
-        if (config('app.debug')) {
-            \Illuminate\Support\Facades\Log::info('OTP Generated', [
-                'user_id' => $user->id,
-                'email' => $user->email,
-                'channel' => 'email',
-                'otp' => $otp,
-            ]);
-        }
+        $user->sendOtp('email');
 
         return redirect(route('otp.verify-page'))->with('status', 'otp-sent')->with('channel', 'email');
     }
@@ -88,16 +78,9 @@ class OtpVerificationController extends Controller
             return redirect(route('dashboard'));
         }
 
-        // Get the latest unused OTP for the logged-in user
-        $latestOtp = Otp::where('user_id', $user->id)
-            ->where('is_used', false)
-            ->where('expires_at', '>', now())
-            ->latest()
-            ->first();
-
-        return view('auth.verify-otp', [
-            'latestOtp' => $latestOtp?->otp,
-        ]);
+        // Don't pass the stored OTP value (now hashed) to the view; it would
+        // also be a PII leak if the value were ever rendered.
+        return view('auth.verify-otp');
     }
 
     /**
@@ -120,7 +103,7 @@ class OtpVerificationController extends Controller
         }
 
         $otpRecord = Otp::where('user_id', $user->id)
-            ->where('otp', $otp)
+            ->where('otp', hash('sha256', $otp))
             ->where('is_used', false)
             ->where('expires_at', '>', now())
             ->latest()

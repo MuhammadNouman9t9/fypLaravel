@@ -62,11 +62,6 @@
                     </div>
 
                     <div class="col-12">
-                        <label class="form-label">Summary</label>
-                        <textarea name="summary" rows="2" class="form-control">{{ old('summary', $product->summary) }}</textarea>
-                    </div>
-
-                    <div class="col-12">
                         <label class="form-label">Description</label>
                         <textarea name="description" rows="4" class="form-control">{{ old('description', $product->description) }}</textarea>
                     </div>

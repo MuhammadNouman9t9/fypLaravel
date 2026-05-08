@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sS http://127.0.0.1:8989/products)",
+      "Bash([ ! -f \"d:/laragon/www/fypLaravel/resources/views/$v\" ])",
+      "Bash([ ! -f \"d:/laragon/www/fypLaravel/resources/views/$v.blade.php\" ])",
+      "Bash(curl -sS -X POST -H \"Content-Type: application/json\" -d \"{\\\\\"message\\\\\":\\\\\"hello\\\\\"}\" \"http://127.0.0.1:8989/chatbot/chat\" -w \"\\\\nHTTP: %{http_code}\\\\n\")",
+      "PowerShell($pids = Get-NetTCPConnection -LocalPort 8989 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique; foreach \\($p in $pids\\) { Stop-Process -Id $p -Force -ErrorAction SilentlyContinue }; Write-Output \"killed: $pids\")",
+      "Bash(grep -nE 'Otp::|->otp\\\\b|\\\\$otp\\\\b' d:/laragon/www/fypLaravel/app '--include=*.php' -r)"
+    ]
+  }
+}

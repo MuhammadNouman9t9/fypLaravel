@@ -27,7 +27,6 @@ class ProductFactory extends Factory
             'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(100, 999),
             'name' => Str::title($name),
             'brand' => $this->faker->randomElement(['SafeNest', 'SecureGuard', 'HomeShield', 'GuardianEye', 'TechSecure', 'SmartGuard']),
-            'summary' => $this->faker->sentence(),
             'description' => $this->faker->paragraphs(3, true),
             'price' => $price,
             'compare_at_price' => $price + $this->faker->randomFloat(2, 10, 75),

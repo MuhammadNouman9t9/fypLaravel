@@ -48,6 +48,10 @@ class UserController extends Controller
             return back()->withErrors(['error' => __('Cannot delete admin user.')]);
         }
 
+        if ($user->id === auth()->id()) {
+            return back()->withErrors(['error' => __('Cannot delete your own account.')]);
+        }
+
         $user->delete();
 
         return redirect()->route('admin.users.index')
@@ -56,21 +60,32 @@ class UserController extends Controller
 
     public function restrict(User $user): RedirectResponse
     {
-        // Add restriction logic here (e.g., add a 'is_restricted' column)
-        // For now, we'll just delete the user
-        return $this->destroy($user);
+        if ($user->isAdmin() || $user->id === auth()->id()) {
+            return back()->withErrors(['error' => __('Cannot restrict this user.')]);
+        }
+
+        // Restriction is currently implemented as a deletion. A dedicated
+        // is_active flag should replace this in a future migration.
+        $user->delete();
+
+        return redirect()->route('admin.users.index')
+            ->with('status', __('User deleted successfully.'));
     }
 
     public function deleteAll(Request $request): RedirectResponse
     {
-        // Delete all users except admins
+        $request->validate([
+            'password' => ['required', 'current_password'],
+            'confirm' => ['required', 'string', 'in:DELETE'],
+        ]);
+
         $deletedCount = User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'admin');
-        })->count();
+        })->where('id', '!=', auth()->id())->count();
 
         User::whereDoesntHave('roles', function ($query) {
             $query->where('name', 'admin');
-        })->delete();
+        })->where('id', '!=', auth()->id())->delete();
 
         return redirect()->route('admin.users.index')
             ->with('status', __('Deleted :count users successfully.', ['count' => $deletedCount]));

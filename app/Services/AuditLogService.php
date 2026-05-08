@@ -81,10 +81,20 @@ class AuditLogService
     {
         $data = $request->all();
 
-        // Remove sensitive data
-        $sensitive = ['password', 'password_confirmation', 'card_number', 'cvv', 'token', 'api_key'];
+        $sensitive = [
+            'password', 'password_confirmation', 'current_password',
+            'card_number', 'cvv', 'cvc',
+            'token', '_token', 'api_key',
+            'secret', 'two_factor_secret',
+            'code', 'otp', 'recovery_code', 'recovery_codes',
+            'cnic', 'ssn',
+            'client_secret', 'payment_intent_id',
+            'stripe_secret', 'stripe_signature',
+        ];
         foreach ($sensitive as $field) {
-            unset($data[$field]);
+            if (array_key_exists($field, $data)) {
+                $data[$field] = '[REDACTED]';
+            }
         }
 
         return $data;

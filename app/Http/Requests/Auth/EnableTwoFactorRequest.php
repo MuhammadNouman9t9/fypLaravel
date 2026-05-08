@@ -13,8 +13,9 @@ class EnableTwoFactorRequest extends FormRequest
 
     public function rules(): array
     {
+        // The secret is sourced from session (server-issued) — never trust a
+        // client-submitted secret, so it is intentionally not validated here.
         return [
-            'secret' => ['required', 'string'],
             'code' => ['required', 'string', 'size:6'],
         ];
     }

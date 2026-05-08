@@ -23,7 +23,21 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
             'owner' => \App\Http\Middleware\EnsureUserIsOwner::class,
         ]);
-        
+
+        // Route unauthenticated users to the right login page based on the
+        // URL prefix they hit, so /admin/* doesn't dump customers on /login
+        // and /owner/* doesn't either.
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('admin', 'admin/*')) {
+                return route('admin.login');
+            }
+            if ($request->is('owner', 'owner/*')) {
+                return route('owner.login');
+            }
+
+            return route('login');
+        });
+
         // Add security headers middleware globally
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })

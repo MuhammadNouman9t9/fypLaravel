@@ -64,10 +64,13 @@ class ProductsController extends Controller
 
             // Filter by category - optimized with join instead of whereHas
             if ($request->filled('category') && $request->category !== '') {
+                $categorySlug = (string) $request->category;
+                // Hash the slug into the cache key so request input can't pollute the cache.
+                $cacheKey = 'category_slug_'.md5($categorySlug);
                 $category = \Illuminate\Support\Facades\Cache::remember(
-                    "category_slug_{$request->category}",
+                    $cacheKey,
                     now()->addHours(24),
-                    fn () => Category::with('children')->where('slug', $request->category)->first()
+                    fn () => Category::with('children')->where('slug', $categorySlug)->first()
                 );
 
                 if ($category) {

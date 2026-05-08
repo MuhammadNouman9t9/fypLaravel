@@ -20,7 +20,7 @@ class TwoFactorController extends Controller
         $this->google2fa = new Google2FA;
     }
 
-    public function show(): View
+    public function show(Request $request): View
     {
         $user = Auth::user();
 
@@ -29,7 +29,14 @@ class TwoFactorController extends Controller
         $secret = null;
 
         if (! $user->hasTwoFactorEnabled()) {
-            $secret = $this->google2fa->generateSecretKey();
+            // Generate secret server-side and stash in session so the user
+            // never gets to choose it. Reuse a stashed secret if one exists
+            // so refreshing the page doesn't invalidate the QR they scanned.
+            $secret = $request->session()->get('pending_2fa_secret');
+            if (! $secret) {
+                $secret = $this->google2fa->generateSecretKey();
+                $request->session()->put('pending_2fa_secret', $secret);
+            }
             $qrCodeUrl = $this->google2fa->getQRCodeUrl(
                 config('app.name', 'SafeNest'),
                 $user->email,
@@ -47,15 +54,23 @@ class TwoFactorController extends Controller
     public function enable(EnableTwoFactorRequest $request): RedirectResponse
     {
         $user = Auth::user();
-        $secret = $request->validated('secret');
+        // Trust only the server-side secret we issued in show(); ignore any
+        // value submitted in the request body to prevent secret-substitution.
+        $secret = $request->session()->get('pending_2fa_secret');
+        if (! $secret) {
+            return redirect()->route('two-factor.show')
+                ->withErrors(['code' => 'Setup session expired. Please try again.']);
+        }
         $code = $request->validated('code');
 
-        // Verify the code before enabling
         $valid = $this->google2fa->verifyKey($secret, $code);
 
         if (! $valid) {
             return back()->withErrors(['code' => 'Invalid verification code. Please try again.'])->withInput();
         }
+
+        // Consume the pending secret so it can't be re-used.
+        $request->session()->forget('pending_2fa_secret');
 
         // Generate recovery codes
         $recoveryCodes = $this->generateRecoveryCodes();
@@ -116,15 +131,23 @@ class TwoFactorController extends Controller
         $valid = $this->google2fa->verifyKey($secret, $code);
 
         if (! $valid) {
-            // Check recovery codes
+            // Check recovery codes using constant-time comparison to avoid
+            // leaking information through response timing.
             $recoveryCodes = $user->getRecoveryCodes();
+            $matched = null;
+            foreach ($recoveryCodes as $stored) {
+                if (hash_equals($stored, $code)) {
+                    $matched = $stored;
+                    break;
+                }
+            }
 
-            if (! in_array($code, $recoveryCodes)) {
+            if ($matched === null) {
                 return back()->withErrors(['code' => 'Invalid verification code.']);
             }
 
-            // Remove used recovery code
-            $recoveryCodes = array_values(array_diff($recoveryCodes, [$code]));
+            // Remove the consumed recovery code.
+            $recoveryCodes = array_values(array_diff($recoveryCodes, [$matched]));
             $user->update([
                 'two_factor_recovery_codes' => encrypt(json_encode($recoveryCodes)),
             ]);

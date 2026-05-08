@@ -261,8 +261,7 @@ class CartController extends Controller
         $taxTotal = round($subtotal * 0.08, 2);
         $grandTotal = $subtotal + $taxTotal;
 
-        $order = Order::create([
-            'user_id' => auth()->id(),
+        $order = auth()->user()->orders()->create([
             'status' => 'pending',
             'payment_status' => 'unpaid',
             'currency' => 'USD',

@@ -217,7 +217,7 @@
                                         </div>
                                         <h3 class="h6 fw-semibold line-clamp-2">{{ $product->name }}</h3>
                                         <p class="small text-secondary line-clamp-2 mb-0">
-                                            {{ $product->summary ?? \Illuminate\Support\Str::limit($product->description, 90) }}
+                                            {{ \Illuminate\Support\Str::limit($product->description, 90) }}
                                         </p>
                                     </div>
                                 </a>

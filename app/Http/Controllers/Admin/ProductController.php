@@ -52,7 +52,6 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'brand' => ['required', 'string', 'max:255'],
             'sku' => ['nullable', 'string', 'max:255', 'unique:products,sku'],
-            'summary' => ['nullable', 'string', 'max:500'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'compare_at_price' => ['nullable', 'numeric', 'min:0'],
@@ -65,12 +64,12 @@ class ProductController extends Controller
             'cover_image' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $validated['created_by'] = auth()->id();
-        $validated['is_active'] = $request->has('is_active');
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_featured'] = $request->boolean('is_featured');
         $validated['currency'] = $validated['currency'] ?? 'USD';
 
         $product = Product::create($validated);
+        $product->forceFill(['created_by' => auth()->id()])->save();
 
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('products', 'public');
@@ -112,7 +111,6 @@ class ProductController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'brand' => ['required', 'string', 'max:255'],
             'sku' => ['nullable', 'string', 'max:255', 'unique:products,sku,'.$product->id],
-            'summary' => ['nullable', 'string', 'max:500'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'compare_at_price' => ['nullable', 'numeric', 'min:0'],
@@ -125,11 +123,15 @@ class ProductController extends Controller
             'cover_image' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $validated['updated_by'] = auth()->id();
-        $validated['is_active'] = $request->has('is_active');
-        $validated['is_featured'] = $request->has('is_featured');
+        $validated['is_active'] = $request->boolean('is_active');
+        $validated['is_featured'] = $request->boolean('is_featured');
+
+        if (blank($validated['sku'] ?? null)) {
+            unset($validated['sku']);
+        }
 
         $product->update($validated);
+        $product->forceFill(['updated_by' => auth()->id()])->save();
 
         if ($request->hasFile('cover_image')) {
             $path = $request->file('cover_image')->store('products', 'public');

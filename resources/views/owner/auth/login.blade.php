@@ -64,8 +64,7 @@
             </form>
 
             <p class="text-center small text-secondary mb-2">
-                Don't have an account?
-                <a href="{{ route('owner.register') }}" class="fw-semibold link-primary text-decoration-none">Register</a>
+                Owner accounts are provisioned by an administrator.
             </p>
 
             <div class="text-center">

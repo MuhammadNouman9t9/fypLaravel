@@ -22,7 +22,6 @@ class Product extends Model
         'slug',
         'name',
         'brand',
-        'summary',
         'description',
         'price',
         'compare_at_price',
@@ -36,8 +35,6 @@ class Product extends Model
         'return_policy',
         'specifications_snapshot',
         'meta',
-        'created_by',
-        'updated_by',
     ];
 
     protected $casts = [
@@ -58,6 +55,14 @@ class Product extends Model
 
             if (blank($product->slug)) {
                 $product->slug = Str::slug($product->name);
+            }
+
+            if (blank($product->sku)) {
+                do {
+                    $candidate = 'SN-'.strtoupper(Str::random(10));
+                } while (static::where('sku', $candidate)->exists());
+
+                $product->sku = $candidate;
             }
         });
     }
@@ -123,7 +128,6 @@ class Product extends Model
                 $builder->where(function (Builder $subQuery) use ($term): void {
                     $subQuery
                         ->where('name', 'like', "%{$term}%")
-                        ->orWhere('summary', 'like', "%{$term}%")
                         ->orWhere('description', 'like', "%{$term}%")
                         ->orWhere('brand', 'like', "%{$term}%");
                 });

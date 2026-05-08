@@ -94,8 +94,9 @@ class User extends Authenticatable
         $otp = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
         $otpPhone = $this->phone ?: 'email-user-'.$this->id;
 
+        // Persist hashed value so DB read doesn't leak OTPs.
         $this->otps()->create([
-            'otp' => $otp,
+            'otp' => hash('sha256', $otp),
             'phone' => $otpPhone,
             'expires_at' => now()->addMinutes(10),
         ]);
