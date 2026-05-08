@@ -32,12 +32,7 @@
                     @endif
                 </a>
 
-                {{-- Admin link is intentionally NOT shown to guests. Admins access /admin/login directly. --}}
-                @auth
-                    @if (auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-primary btn-sm">{{ __('Admin') }}</a>
-                    @endif
-                @endauth
+                {{-- Admin link is not shown in the public nav at all. Admins access /admin directly. --}}
 
                 @auth
                     <a href="{{ route('profile.edit') }}" class="btn btn-outline-primary btn-sm">{{ __('Profile') }}</a>

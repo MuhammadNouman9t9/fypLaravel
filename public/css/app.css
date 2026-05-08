@@ -2,7 +2,122 @@
 :root {
     --bs-primary: #6f42c1;
     --bs-primary-rgb: 111, 66, 193;
+    --bs-link-color: #6f42c1;
+    --bs-link-color-rgb: 111, 66, 193;
+    --bs-link-hover-color: #5a359c;
+    --bs-link-hover-color-rgb: 90, 53, 156;
+    --bs-info: #6f42c1;
+    --bs-info-rgb: 111, 66, 193;
+    --safenest-purple: #6f42c1;
+    --safenest-purple-dark: #5a359c;
+    --safenest-purple-light: #8b5cf6;
+    --safenest-purple-50: #f3eefa;
+    --safenest-purple-100: #e3d6f3;
+    --safenest-purple-200: #c8aee6;
+    --safenest-purple-700: #4f2d8a;
+    --safenest-purple-900: #2e1a52;
 }
+
+/* Bootstrap primary button override (Sass-compiled colors don't pick up --bs-primary) */
+.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #6f42c1;
+    --bs-btn-border-color: #6f42c1;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5e389e;
+    --bs-btn-hover-border-color: #59348f;
+    --bs-btn-focus-shadow-rgb: 111, 66, 193;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #59348f;
+    --bs-btn-active-border-color: #532f86;
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #6f42c1;
+    --bs-btn-disabled-border-color: #6f42c1;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #6f42c1;
+    --bs-btn-border-color: #6f42c1;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #6f42c1;
+    --bs-btn-hover-border-color: #6f42c1;
+    --bs-btn-focus-shadow-rgb: 111, 66, 193;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #6f42c1;
+    --bs-btn-active-border-color: #6f42c1;
+    --bs-btn-disabled-color: #6f42c1;
+    --bs-btn-disabled-border-color: #6f42c1;
+}
+
+.btn-info {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #6f42c1;
+    --bs-btn-border-color: #6f42c1;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #5e389e;
+    --bs-btn-hover-border-color: #59348f;
+    --bs-btn-focus-shadow-rgb: 111, 66, 193;
+}
+
+.bg-info,
+.text-bg-info {
+    background-color: #6f42c1 !important;
+    color: #fff !important;
+}
+
+.text-info { color: #6f42c1 !important; }
+.text-primary { color: #6f42c1 !important; }
+.bg-primary { background-color: #6f42c1 !important; }
+.border-primary { border-color: #6f42c1 !important; }
+.link-primary { color: #6f42c1 !important; }
+.link-primary:hover { color: #5a359c !important; }
+.text-bg-primary { background-color: #6f42c1 !important; color: #fff !important; }
+.text-bg-primary-subtle,
+.bg-primary-subtle { background-color: #ede4f8 !important; }
+.text-primary-subtle { color: #4f2d8a !important; }
+
+/* Form controls focus ring (default Bootstrap is blue) */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: #c8aee6;
+    box-shadow: 0 0 0 0.25rem rgba(111, 66, 193, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+.page-link { color: #6f42c1; }
+.page-link:hover { color: #5a359c; }
+.page-item.active .page-link {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+}
+
+a { color: #6f42c1; }
+a:hover { color: #5a359c; }
+
+/* Tailwind-style legacy classes that still appear in older views */
+.bg-blue-50 { background-color: #f3eefa !important; }
+.bg-blue-100 { background-color: #e3d6f3 !important; }
+.bg-blue-200 { background-color: #c8aee6 !important; }
+.bg-blue-500 { background-color: #6f42c1 !important; }
+.bg-blue-600 { background-color: #6f42c1 !important; }
+.bg-blue-700 { background-color: #5a359c !important; }
+.text-blue-600 { color: #6f42c1 !important; }
+.text-blue-700 { color: #5a359c !important; }
+.text-blue-800 { color: #4f2d8a !important; }
+.text-blue-900 { color: #2e1a52 !important; }
+.border-blue-200 { border-color: #c8aee6 !important; }
+.border-blue-500 { border-color: #6f42c1 !important; }
+.hover\:bg-blue-50:hover { background-color: #f3eefa !important; }
+.hover\:bg-blue-700:hover { background-color: #5a359c !important; }
+.hover\:border-blue-500:hover { border-color: #6f42c1 !important; }
+.hover\:text-blue-700:hover { color: #5a359c !important; }
+.hover\:text-blue-900:hover { color: #2e1a52 !important; }
+.focus\:ring-blue-500:focus { box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.4) !important; }
 
 .bg-gradient-purple {
     background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
