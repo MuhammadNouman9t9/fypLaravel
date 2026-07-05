@@ -19,7 +19,7 @@ class OtpVerificationController extends Controller
         $user = $request->user();
 
         // If already verified, redirect to dashboard
-        if ($user && $user->phone_verified_at) {
+        if ($user && $user->email_verified_at) {
             return redirect(route('dashboard'));
         }
 
@@ -74,7 +74,7 @@ class OtpVerificationController extends Controller
         $user = $request->user();
 
         // If already verified, redirect to dashboard
-        if ($user && $user->phone_verified_at) {
+        if ($user && $user->email_verified_at) {
             return redirect(route('dashboard'));
         }
 
@@ -115,8 +115,16 @@ class OtpVerificationController extends Controller
 
         $otpRecord->update(['is_used' => true]);
 
-        $user->update(['phone_verified_at' => now()]);
+        // Set the flag matching the channel this OTP was actually sent
+        // through (recorded in session by User::sendOtp()), not Otp::phone —
+        // that column holds the user's phone number whenever one is on file,
+        // regardless of which channel was used.
+        if ($request->session()->pull('otp_channel', 'email') === 'phone') {
+            $user->update(['phone_verified_at' => now()]);
+        } else {
+            $user->update(['email_verified_at' => now()]);
+        }
 
-        return redirect(route('landing.home'))->with('status', 'phone-verified');
+        return redirect(route('landing.home'))->with('status', 'email-verified');
     }
 }

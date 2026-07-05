@@ -67,14 +67,16 @@
                                     {{ $product->is_active ? 'Active' : 'Inactive' }}
                                 </span>
                             </td>
-                            <td class="d-flex flex-wrap gap-2">
-                                <a href="{{ route('admin.products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
-                                <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                                <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                                </form>
+                            <td style="white-space: nowrap;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <a href="{{ route('admin.products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <form action="{{ route('admin.products.destroy', $product) }}" method="POST" onsubmit="return confirm('Are you sure?')" class="m-0">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty

@@ -69,6 +69,13 @@ class AuthenticatedSessionController extends Controller
             ])->onlyInput('email');
         }
 
+        // Block login until the account's email OTP has been verified
+        if (! $user->email_verified_at) {
+            $user->sendOtp('email');
+
+            return redirect()->route('otp.verify-page')->with('status', 'otp-sent')->with('channel', 'email');
+        }
+
         // Check if 2FA is enabled and not verified in this session
         if ($user->two_factor_confirmed_at && ! $request->session()->get('two_factor_verified')) {
             return redirect()->route('two-factor.verify');

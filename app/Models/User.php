@@ -36,6 +36,8 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_confirmed_at',
         'last_login_at',
+        'phone_verified_at',
+        'email_verified_at',
     ];
 
     /**
@@ -93,6 +95,12 @@ class User extends Authenticatable
     {
         $otp = str_pad((string) random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
         $otpPhone = $this->phone ?: 'email-user-'.$this->id;
+
+        // Otp::phone reflects the user's phone number whenever one is on file
+        // (used by the SMS branch below), regardless of $channel — so it can't
+        // be used to tell which channel a given OTP was sent through. Track
+        // that separately so verify() knows which "verified" flag to set.
+        session(['otp_channel' => $channel]);
 
         // Persist hashed value so DB read doesn't leak OTPs.
         $this->otps()->create([

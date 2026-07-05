@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -29,7 +30,7 @@ class RegisteredUserController extends Controller
 
         $avatarPath = $request->file('avatar')->store('avatars', 'public');
 
-        User::create([
+        $data = [
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
@@ -41,13 +42,27 @@ class RegisteredUserController extends Controller
             'study_program' => $validated['study_program'],
             'about_me' => $validated['about_me'],
             'password' => $validated['password'],
-        ]);
+        ];
 
-        // Store registered email in session for login page suggestion
-        $request->session()->put('registered_email', $validated['email']);
+        // Reuse the pending (unverified) row from a prior registration attempt
+        // instead of creating a duplicate for the same email.
+        $user = User::where('email', $validated['email'])
+            ->whereNull('email_verified_at')
+            ->first();
+
+        if ($user) {
+            $user->update($data);
+        } else {
+            $user = User::create($data);
+        }
+
+        Auth::login($user);
+
+        $user->sendOtp('email');
 
         return redirect()
-            ->route('login')
-            ->with('status', 'registered');
+            ->route('otp.verify-page')
+            ->with('status', 'otp-sent')
+            ->with('channel', 'email');
     }
 }

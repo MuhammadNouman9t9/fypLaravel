@@ -1,87 +1,81 @@
 <x-landing-layout title="Support Conversation">
-    <div class="bg-white min-h-screen py-12">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-6">
-                <a href="{{ route('support.index') }}" class="text-blue-600 hover:text-blue-700">← Back to Support</a>
+    <div class="bg-light min-vh-100 py-4 py-lg-5">
+        <div class="container" style="max-width: 48rem;">
+            <div class="mb-4">
+                <a href="{{ route('support.index') }}" class="text-decoration-none">&larr; Back to Support</a>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6 mb-6">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h2 class="text-2xl font-semibold text-gray-900">{{ $conversation->subject ?? 'No Subject' }}</h2>
-                        <p class="text-sm text-gray-600 mt-1">
-                            Status: 
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                {{ $conversation->status === 'open' ? 'bg-green-100 text-green-800' : '' }}
-                                {{ $conversation->status === 'closed' ? 'bg-gray-100 text-gray-800' : '' }}
-                                {{ $conversation->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : '' }}
-                            ">
-                                {{ ucfirst($conversation->status) }}
-                            </span>
-                        </p>
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h2 class="h4 fw-bold text-dark mb-0">{{ $conversation->subject ?? 'No Subject' }}</h2>
+                        <span class="badge
+                            {{ $conversation->status === 'open' ? 'text-bg-success' : '' }}
+                            {{ $conversation->status === 'closed' ? 'text-bg-secondary' : '' }}
+                            {{ $conversation->status === 'pending' ? 'text-bg-warning' : '' }}
+                        ">
+                            {{ ucfirst($conversation->status) }}
+                        </span>
                     </div>
-                </div>
 
-                @if ($conversation->metadata)
-                    <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <h3 class="text-sm font-semibold text-gray-900 mb-3">Request Details</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                            @if (isset($conversation->metadata['property_type']))
-                                <div>
-                                    <span class="text-gray-600">Property Type:</span>
-                                    <span class="font-medium text-gray-900 ml-2">{{ ucfirst($conversation->metadata['property_type']) }}</span>
-                                </div>
-                            @endif
-                            @if (isset($conversation->metadata['property_size']))
-                                <div>
-                                    <span class="text-gray-600">Property Size:</span>
-                                    <span class="font-medium text-gray-900 ml-2">{{ ucfirst($conversation->metadata['property_size']) }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-            </div>
-
-            <div class="bg-white rounded-lg shadow p-6 mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Messages</h3>
-                <div class="space-y-4 max-h-96 overflow-y-auto" id="messages-container">
-                    @foreach ($conversation->messages as $message)
-                        <div class="p-4 rounded-lg {{ $message->sender_type === 'admin' ? 'bg-blue-50 ml-8' : 'bg-gray-50 mr-8' }}">
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium text-gray-900">
-                                    {{ $message->sender_type === 'admin' ? ($message->sender->name ?? 'Admin') : 'You' }}
-                                </span>
-                                <span class="text-xs text-gray-500">{{ $message->sent_at->format('M d, Y h:i A') }}</span>
+                    @if ($conversation->metadata)
+                        <div class="mt-3 p-3 bg-light rounded-3 border">
+                            <h3 class="small fw-bold text-dark mb-2">Request Details</h3>
+                            <div class="row small g-2">
+                                @if (isset($conversation->metadata['property_type']))
+                                    <div class="col-sm-6">
+                                        <span class="text-secondary">Property Type:</span>
+                                        <span class="fw-semibold text-dark ms-1">{{ ucfirst($conversation->metadata['property_type']) }}</span>
+                                    </div>
+                                @endif
+                                @if (isset($conversation->metadata['property_size']))
+                                    <div class="col-sm-6">
+                                        <span class="text-secondary">Property Size:</span>
+                                        <span class="fw-semibold text-dark ms-1">{{ ucfirst($conversation->metadata['property_size']) }}</span>
+                                    </div>
+                                @endif
                             </div>
-                            <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ $message->body }}</p>
                         </div>
-                    @endforeach
+                    @endif
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h6 fw-bold text-dark mb-3">Messages</h3>
+                    <div class="d-flex flex-column gap-3" style="max-height: 24rem; overflow-y: auto;" id="messages-container">
+                        @foreach ($conversation->messages as $message)
+                            <div class="p-3 rounded-3 {{ $message->sender_type === 'admin' ? 'bg-primary-subtle ms-4' : 'bg-light me-4' }}">
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <span class="small fw-semibold text-dark">
+                                        {{ $message->sender_type === 'admin' ? ($message->sender->name ?? 'Admin') : 'You' }}
+                                    </span>
+                                    <span class="small text-secondary">{{ $message->sent_at->format('M d, Y h:i A') }}</span>
+                                </div>
+                                <p class="small text-secondary mb-0" style="white-space: pre-wrap;">{{ $message->body }}</p>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
 
             @if ($conversation->status !== 'closed')
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Send Message</h3>
-                    <form action="{{ route('support.respond', $conversation) }}" method="POST" id="message-form">
-                        @csrf
-                        <div class="mb-4">
-                            <textarea 
-                                name="message" 
-                                rows="4" 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                placeholder="Type your message..." 
-                                required
-                                id="message-input"
-                            ></textarea>
-                        </div>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Send Message</button>
-                    </form>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h6 fw-bold text-dark mb-3">Send Message</h3>
+                        <form action="{{ route('support.respond', $conversation) }}" method="POST" id="message-form">
+                            @csrf
+                            <div class="mb-3">
+                                <textarea name="message" rows="4" class="form-control" placeholder="Type your message..." required id="message-input"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
                 </div>
             @else
-                <div class="bg-gray-50 rounded-lg border border-gray-200 p-6 text-center">
-                    <p class="text-gray-600">This conversation is closed. If you need further assistance, please start a new consultation request.</p>
-                    <a href="{{ route('support.index') }}" class="mt-4 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
+                <div class="card border-0 bg-light text-center p-4">
+                    <p class="text-secondary mb-3">This conversation is closed. If you need further assistance, please start a new consultation request.</p>
+                    <a href="{{ route('support.index') }}" class="btn btn-primary mx-auto" style="width: fit-content;">
                         New Consultation Request
                     </a>
                 </div>
@@ -90,14 +84,12 @@
     </div>
 
     <script>
-        // Auto-scroll to bottom of messages
         const messagesContainer = document.getElementById('messages-container');
         if (messagesContainer) {
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
 
-        // Clear message input after successful submission
-        document.getElementById('message-form')?.addEventListener('submit', function() {
+        document.getElementById('message-form')?.addEventListener('submit', function () {
             setTimeout(() => {
                 document.getElementById('message-input').value = '';
             }, 100);

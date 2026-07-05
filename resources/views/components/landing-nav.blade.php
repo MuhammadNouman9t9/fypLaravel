@@ -17,6 +17,9 @@
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('landing.products') ? 'active' : '' }}" href="{{ route('landing.products') }}">{{ __('Shop') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('support.*') ? 'active' : '' }}" href="{{ route('support.index') }}">{{ __('Support') }}</a>
+                </li>
             </ul>
 
             <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2">

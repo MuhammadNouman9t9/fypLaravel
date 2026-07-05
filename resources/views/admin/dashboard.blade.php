@@ -52,6 +52,20 @@
         </div>
 
         <div class="col-12 col-md-6 col-xl-4">
+            <a href="{{ route('admin.support.index') }}" class="card h-100 text-decoration-none text-dark shadow-sm border hover-shadow">
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <span class="d-inline-flex align-items-center justify-content-center rounded-3 bg-info bg-opacity-10 text-info-emphasis p-2">
+                            <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                        </span>
+                        <h2 class="h6 fw-semibold mb-0">Customer support</h2>
+                    </div>
+                    <p class="small text-secondary mb-0">View and reply to customer conversations.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
             <a href="{{ route('admin.analytics.index') }}" class="card h-100 text-decoration-none text-dark shadow-sm border hover-shadow">
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3 mb-2">

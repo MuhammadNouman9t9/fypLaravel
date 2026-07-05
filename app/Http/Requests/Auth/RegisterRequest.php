@@ -23,6 +23,14 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
+        // If an unverified registration already exists for this email, let the
+        // user resubmit the form (with the same email/phone/cnic) so the OTP
+        // step can simply be resent instead of failing on "already registered".
+        $unverifiedUserId = User::query()
+            ->where('email', $this->input('email'))
+            ->whereNull('email_verified_at')
+            ->value('id');
+
         return [
             'first_name' => [
                 'required',
@@ -42,14 +50,14 @@ class RegisterRequest extends FormRequest
                 'lowercase',
                 'email:rfc,dns',
                 'max:255',
-                Rule::unique(User::class),
+                Rule::unique(User::class)->ignore($unverifiedUserId),
             ],
             'phone' => [
                 'nullable',
                 'string',
                 'max:32',
                 'regex:/^\+92[0-9]{10}$/',
-                Rule::unique(User::class),
+                Rule::unique(User::class)->ignore($unverifiedUserId),
             ],
             'avatar' => [
                 'required',
@@ -62,7 +70,7 @@ class RegisterRequest extends FormRequest
                 'string',
                 'size:13',
                 'regex:/^[0-9]{13}$/',
-                Rule::unique(User::class),
+                Rule::unique(User::class)->ignore($unverifiedUserId),
             ],
             'preferred_language' => [
                 'nullable',

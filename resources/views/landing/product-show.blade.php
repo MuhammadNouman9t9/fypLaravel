@@ -135,21 +135,27 @@
 
                         <div class="card shadow-sm mb-4">
                             <div class="card-body">
-                                <form action="{{ route('cart.store') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                                    <div class="d-flex align-items-center flex-wrap gap-3 mb-3">
-                                        <label class="fw-semibold mb-0">Quantity:</label>
-                                        <div class="input-group" style="max-width: 12rem;">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="decreaseQty()">−</button>
-                                            <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->inventory->quantity_on_hand ?? 10 }}" class="form-control text-center">
-                                            <button type="button" class="btn btn-outline-secondary" onclick="increaseQty()">+</button>
+                                @if ($product->inventory && $product->inventory->quantity_on_hand > 0)
+                                    <form action="{{ route('cart.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <div class="d-flex align-items-center flex-wrap gap-3 mb-3">
+                                            <label class="fw-semibold mb-0">Quantity:</label>
+                                            <div class="input-group" style="max-width: 12rem;">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="decreaseQty()">−</button>
+                                                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ $product->inventory->quantity_on_hand }}" class="form-control text-center">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="increaseQty()">+</button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary btn-lg w-100" {{ ($product->inventory && $product->inventory->quantity_on_hand <= 0) ? 'disabled' : '' }}>
-                                        {{ ($product->inventory && $product->inventory->quantity_on_hand <= 0) ? 'Out of Stock' : 'Add to Cart' }}
+                                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                                            Add to Cart
+                                        </button>
+                                    </form>
+                                @else
+                                    <button class="btn btn-secondary btn-lg w-100" disabled>
+                                        Out of Stock
                                     </button>
-                                </form>
+                                @endif
                             </div>
                         </div>
 

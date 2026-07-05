@@ -32,6 +32,12 @@ Route::middleware('auth')->group(function () {
     // Order History Routes
     Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [\App\Http\Controllers\OrderController::class, 'show'])->name('orders.show');
+
+    // Support Routes
+    Route::get('/support', [\App\Http\Controllers\Support\SupportController::class, 'index'])->name('support.index');
+    Route::get('/support/{conversation}', [\App\Http\Controllers\Support\SupportController::class, 'show'])->name('support.show');
+    Route::post('/support/{conversation}/respond', [\App\Http\Controllers\Support\SupportController::class, 'respond'])->name('support.respond');
+    Route::post('/support/experts', [\App\Http\Controllers\Support\ExpertConsultationController::class, 'store'])->name('support.experts.store');
 });
 
 // Payment Routes
